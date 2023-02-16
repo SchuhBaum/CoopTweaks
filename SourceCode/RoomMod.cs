@@ -20,6 +20,18 @@ namespace CoopTweaks
         internal static void OnToggle()
         {
             isEnabled = !isEnabled;
+            if (MainMod.Option_SlowMotion)
+            {
+                if (isEnabled)
+                {
+                    On.Room.PlaySound_SoundID_BodyChunk_bool_float_float += Room_PlaySound; // skip mushroom sound loop;
+                }
+                else
+                {
+                    On.Room.PlaySound_SoundID_BodyChunk_bool_float_float -= Room_PlaySound;
+                }
+            }
+
             if (MainMod.Option_SlugcatCollision)
             {
                 if (isEnabled)
@@ -36,6 +48,12 @@ namespace CoopTweaks
         //
         // private
         //
+
+        private static ChunkSoundEmitter Room_PlaySound(On.Room.orig_PlaySound_SoundID_BodyChunk_bool_float_float orig, Room room, SoundID soundId, BodyChunk chunk, bool loop, float vol, float pitch) // MainMod.Option_ModEnabled && MainMod.Option_SoundLoop
+        {
+            if (soundId == SoundID.Mushroom_Trip_LOOP) return orig(room, SoundID.None, chunk, loop, vol, pitch);
+            return orig(room, soundId, chunk, loop, vol, pitch);
+        }
 
         private static void Room_Update(On.Room.orig_Update orig, Room room)
         {

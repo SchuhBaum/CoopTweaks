@@ -3,17 +3,12 @@ using BepInEx;
 using MonoMod.Cil;
 using UnityEngine;
 
-//TODO
-// don't throw slugcat from you back when Option_SlugOnBack is enabled;
-
-
-
 // temporary fix // should be added automatically //TODO
 #pragma warning disable CS0618
 [assembly: SecurityPermission(SecurityAction.RequestMinimum, SkipVerification = true)]
 namespace CoopTweaks
 {
-    [BepInPlugin("SchuhBaum.CoopTweaks", "CoopTweaks", "0.0.2")]
+    [BepInPlugin("SchuhBaum.CoopTweaks", "CoopTweaks", "0.0.3")]
     public class MainMod : BaseUnityPlugin
     {
         //
@@ -22,7 +17,7 @@ namespace CoopTweaks
 
         public static readonly string MOD_ID = "CoopTweaks";
         public static readonly string author = "SchuhBaum";
-        public static readonly string version = "0.0.2";
+        public static readonly string version = "0.0.3";
 
         //
         // options
@@ -31,8 +26,9 @@ namespace CoopTweaks
         public static bool Option_DeafBeep => MainModOptions.deafBeep.Value;
         public static bool Option_ItemBlinking => MainModOptions.itemBlinking.Value;
         public static bool Option_ReleaseGrasp => MainModOptions.releaseGrasp.Value;
-
         public static bool Option_RegionGates => MainModOptions.regionGates.Value;
+
+        public static bool Option_SlowMotion => MainModOptions.slowMotion.Value;
         public static bool Option_SlugcatCollision => MainModOptions.slugcatCollision.Value;
         public static bool Option_SlugOnBack => MainModOptions.slugOnBack.Value;
 
@@ -137,6 +133,24 @@ namespace CoopTweaks
             isInitialized = true;
 
             Debug.Log("CoopTweaks: version " + version);
+
+            foreach (ModManager.Mod mod in ModManager.ActiveMods)
+            {
+                if (mod.id == "SchuhBaum.SBCameraScroll")
+                {
+                    isSBCameraScrollEnabled = true;
+                    break;
+                }
+            }
+
+            if (!isSBCameraScrollEnabled)
+            {
+                Debug.Log("CoopTweaks: SBCameraScroll not found.");
+            }
+            else
+            {
+                Debug.Log("CoopTweaks: SBCameraScroll found. Synchronize shortcut position updates when mushroom effect is active.");
+            }
 
             ArtificialIntelligenceMod.OnEnable();
             RainWorldGameMod.OnEnable();

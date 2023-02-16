@@ -15,8 +15,9 @@ namespace CoopTweaks
         public static Configurable<bool> deafBeep = instance.config.Bind("deafBeep", defaultValue: true, new ConfigurableInfo("When enabled, mutes the tinnitus beep when near explosions.", null, "", "Deaf Beep"));
         public static Configurable<bool> itemBlinking = instance.config.Bind("itemBlinking", defaultValue: true, new ConfigurableInfo("When enabled, nearby items only blink even you can pick them up.", null, "", "Item Blinking"));
         public static Configurable<bool> releaseGrasp = instance.config.Bind("releaseGrasp", defaultValue: true, new ConfigurableInfo("When enabled, other slugcats stop grabbing you when you press jump.", null, "", "Release Grasp"));
-
         public static Configurable<bool> regionGates = instance.config.Bind("regionGates", defaultValue: true, new ConfigurableInfo("When enabled, region gates don't wait for players to stand still.", null, "", "Region Gates"));
+
+        public static Configurable<bool> slowMotion = instance.config.Bind("slowMotion", defaultValue: true, new ConfigurableInfo("When enabled, removes or reduces the slow motion effect in most situations.", null, "", "Slow Motion"));
         public static Configurable<bool> slugcatCollision = instance.config.Bind("slugcatCollision", defaultValue: true, new ConfigurableInfo("When enabled, slugcats don't collide with each other.", null, "", "Slugcat Collision"));
         public static Configurable<bool> slugOnBack = instance.config.Bind("slugOnBack", defaultValue: true, new ConfigurableInfo("When enabled, you can only drop slugcats from your back when holding down and grab.", null, "", "SlugOnBack"));
 
