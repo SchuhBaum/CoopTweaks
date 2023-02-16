@@ -34,20 +34,6 @@ namespace CoopTweaks
         }
 
         //
-        // public
-        //
-
-        public static bool AmIBeingCarried(this AbstractCreature abstractCreature)
-        {
-            // return true when the player is a "spear" carried by another player
-            foreach (AbstractPhysicalObject.AbstractObjectStick abstractObjectStick in abstractCreature.stuckObjects)
-            {
-                if (abstractObjectStick is Player.AbstractOnBackStick abstractOnBackStick && abstractOnBackStick.Spear == abstractCreature) return true;
-            }
-            return false;
-        }
-
-        //
         // private
         //
 
@@ -87,7 +73,9 @@ namespace CoopTweaks
                     // seems like CollideWithObjects is not enough;
                     // need to check iAmBeingCarried too;
                     // otherwise backPlayers can collide with creatures that are being eating;
-                    if (player.CollideWithObjects && !player.abstractCreature.AmIBeingCarried())
+                    // not sure if this is still a thing but doesn't hurt;
+                    // onBack is the player that carries you;
+                    if (player.CollideWithObjects && player.onBack == null)
                     {
                         creaturesInRoomList.Add(player);
                         player.CollideWithObjects = false;

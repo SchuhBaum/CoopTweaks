@@ -1,5 +1,5 @@
 ## CoopTweaks
-###### Version: 0.0.1
+###### Version: 0.0.2
 
 This is a mod for Rain World v1.9.
 
@@ -10,12 +10,12 @@ Includes various tweaks:
 - (Release Grasp) Other slugcats stop grabbing you when you press jump.
 - (Region Gates) Region gates don't wait for players to stand still.
 - (Slugcat Collision) Slugcats don't collide with each other.
-- (SlugOnBack) You can only drop slugcats from your back when holding down.
+- (SlugOnBack) You can only drop slugcats from your back when holding down and grab.
 This mod is a port of most of the tweaks from the mod JollyCoopFixesAndStuff for Rain World v1.5.
 
 ### Installation
 0. Update Rain World to version 1.9 if needed.
-1. Download the file  `CoopTweaks.zip` from [Releases](https://github.com/SchuhBaum/CoopTweaks/releases/tag/v0.0.1).
+1. Download the file  `CoopTweaks.zip` from [Releases](https://github.com/SchuhBaum/CoopTweaks/releases/tag/v0.0.2).
 2. Extract its content in the folder `[Steam]\SteamApps\common\Rain World\RainWorld_Data\StreamingAssets\mods`.
 3. Start the game as normal. In the main menu select `Remix` and enable the mod. 
 
@@ -30,5 +30,6 @@ If you have feedback, you can message me on Discord `@SchuhBaum#7246` or write a
 There are two licenses available - MIT and Unlicense. You can choose which one you want to use. 
 
 ### Changelog
-v0.0.1:
+v0.0.2:
 - Initial release.
+- (SlugOnBack) Removed the ability to directly throw slugcats from back.

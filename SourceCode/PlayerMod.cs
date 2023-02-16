@@ -1,3 +1,8 @@
+using System;
+using Mono.Cecil.Cil;
+using MonoMod.Cil;
+using UnityEngine;
+
 namespace CoopTweaks
 {
     internal static class PlayerMod
@@ -38,10 +43,45 @@ namespace CoopTweaks
                     On.Player.CanIPickThisUp -= Player_CanIPickThisUp;
                 }
             }
+
+            if (MainMod.Option_SlugOnBack)
+            {
+                if (isEnabled)
+                {
+                    IL.Player.GrabUpdate += IL_Player_GrabUpdate; // remove ability to throw slugcats from back;
+                }
+                else
+                {
+                    IL.Player.GrabUpdate -= IL_Player_GrabUpdate;
+                }
+            }
         }
 
         //
         // private
+        //
+
+        private static void IL_Player_GrabUpdate(ILContext context)
+        {
+            // MainMod.LogAllInstructions(context);
+
+            ILCursor cursor = new(context);
+            if (cursor.TryGotoNext(instruction => instruction.MatchCallvirt<Player.SlugOnBack>("SlugToHand")))
+            {
+                Debug.Log("CoopTweaks: IL_Player_GrabUpdate: Index " + cursor.Index); // 2497
+
+                cursor.Goto(cursor.Index - 14); // 2483
+                cursor.Emit(OpCodes.Br, cursor.Prev.Operand); // skip whole if statement;
+            }
+            else
+            {
+                Debug.LogException(new Exception("CoopTweaks: IL_Player_GrabUpdate failed."));
+            }
+            // MainMod.LogAllInstructions(context);
+        }
+
+        //
+        //
         //
 
         private static bool Player_CanIPickThisUp(On.Player.orig_CanIPickThisUp orig, Player player, PhysicalObject physicalObject)
