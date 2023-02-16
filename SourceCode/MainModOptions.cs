@@ -82,8 +82,11 @@ namespace CoopTweaks
             AddCheckBox(itemBlinking, (string)itemBlinking.info.Tags[0]);
             AddCheckBox(regionGates, (string)regionGates.info.Tags[0]);
             AddCheckBox(releaseGrasp, (string)releaseGrasp.info.Tags[0]);
+            AddCheckBox(slowMotion, (string)slowMotion.info.Tags[0]);
+
             AddCheckBox(slugcatCollision, (string)slugcatCollision.info.Tags[0]);
             AddCheckBox(slugOnBack, (string)slugOnBack.info.Tags[0]);
+
             DrawCheckBoxes(ref Tabs[0]);
 
             DrawBox(ref Tabs[0]);
@@ -94,6 +97,8 @@ namespace CoopTweaks
             Debug.Log("CoopTweaks: Option_ItemBlinking " + MainMod.Option_ItemBlinking);
             Debug.Log("CoopTweaks: Option_RegionGates " + MainMod.Option_RegionGates);
             Debug.Log("CoopTweaks: Option_ReleaseGrasp " + MainMod.Option_ReleaseGrasp);
+            Debug.Log("CoopTweaks: Option_SlowMotion " + MainMod.Option_SlowMotion);
+
             Debug.Log("CoopTweaks: Option_SlugcatCollision " + MainMod.Option_SlugcatCollision);
             Debug.Log("CoopTweaks: Option_SlugOnBack " + MainMod.Option_SlugOnBack);
         }
