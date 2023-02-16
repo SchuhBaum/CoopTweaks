@@ -1,0 +1,10 @@
+{
+  "id": "CoopTweaks",
+  "name": "CoopTweaks",
+  "version": "0.0.1",
+  "authors": "SchuhBaum",
+  "description": "Includes various tweaks. Each tweak can be turned off in the Remix options menu.",
+  "requirements": [],
+  "requirements_names": [],
+  "checksum_override_version": false
+}
