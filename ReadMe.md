@@ -38,3 +38,4 @@ v0.0.6:
 - (Slow Motion) Included the ReducedSlowMotion mod since it is a tweak from JollyCoopFixesAndStuff as well.
 - (Slow Motion) Updated description.
 - (Slow Motion) This option was not visible in the Remix options menu.
+- (Deaf Beep) This option was not visible in the Remix options menu.
