@@ -79,11 +79,12 @@ namespace CoopTweaks
             AddNewLine();
             AddBox();
 
+            AddCheckBox(deafBeep, (string)deafBeep.info.Tags[0]);
             AddCheckBox(itemBlinking, (string)itemBlinking.info.Tags[0]);
             AddCheckBox(regionGates, (string)regionGates.info.Tags[0]);
             AddCheckBox(releaseGrasp, (string)releaseGrasp.info.Tags[0]);
-            AddCheckBox(slowMotion, (string)slowMotion.info.Tags[0]);
 
+            AddCheckBox(slowMotion, (string)slowMotion.info.Tags[0]);
             AddCheckBox(slugcatCollision, (string)slugcatCollision.info.Tags[0]);
             AddCheckBox(slugOnBack, (string)slugOnBack.info.Tags[0]);
 
@@ -94,11 +95,12 @@ namespace CoopTweaks
 
         public void MainModOptions_OnConfigChanged()
         {
+            Debug.Log("CoopTweaks: Option_DeafBeep " + MainMod.Option_DeafBeep);
             Debug.Log("CoopTweaks: Option_ItemBlinking " + MainMod.Option_ItemBlinking);
             Debug.Log("CoopTweaks: Option_RegionGates " + MainMod.Option_RegionGates);
             Debug.Log("CoopTweaks: Option_ReleaseGrasp " + MainMod.Option_ReleaseGrasp);
-            Debug.Log("CoopTweaks: Option_SlowMotion " + MainMod.Option_SlowMotion);
 
+            Debug.Log("CoopTweaks: Option_SlowMotion " + MainMod.Option_SlowMotion);
             Debug.Log("CoopTweaks: Option_SlugcatCollision " + MainMod.Option_SlugcatCollision);
             Debug.Log("CoopTweaks: Option_SlugOnBack " + MainMod.Option_SlugOnBack);
         }
