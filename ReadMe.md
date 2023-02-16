@@ -11,6 +11,7 @@ Includes various tweaks:
 - (Region Gates) Region gates don't wait for players to stand still.
 - (Slugcat Collision) Slugcats don't collide with each other.
 - (SlugOnBack) You can only drop slugcats from your back when holding down and grab.  
+  
 This mod is a port of most of the tweaks from the mod JollyCoopFixesAndStuff for Rain World v1.5.
 
 ### Installation
