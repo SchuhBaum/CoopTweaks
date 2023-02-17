@@ -8,7 +8,7 @@ using UnityEngine;
 [assembly: SecurityPermission(SecurityAction.RequestMinimum, SkipVerification = true)]
 namespace CoopTweaks
 {
-    [BepInPlugin("SchuhBaum.CoopTweaks", "CoopTweaks", "0.0.6")]
+    [BepInPlugin("SchuhBaum.CoopTweaks", "CoopTweaks", "0.0.7")]
     public class MainMod : BaseUnityPlugin
     {
         //
@@ -17,7 +17,7 @@ namespace CoopTweaks
 
         public static readonly string MOD_ID = "CoopTweaks";
         public static readonly string author = "SchuhBaum";
-        public static readonly string version = "0.0.6";
+        public static readonly string version = "0.0.7";
 
         //
         // options

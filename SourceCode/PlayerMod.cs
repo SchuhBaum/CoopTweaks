@@ -146,6 +146,12 @@ namespace CoopTweaks
 
         private static void Player_Update(On.Player.orig_Update orig, Player player, bool eu) // MainMod.Option_DeafBeep // MainMod.Option_ReleaseGrasp // MainMod.Option_SlowMotion // MainMod.Option_SlugOnBack
         {
+            if (player.isNPC)
+            {
+                orig(player, eu);
+                return;
+            }
+
             if (MainMod.Option_DeafBeep)
             {
                 player.deaf = 0; // this sound loop can get stuck // disable for now

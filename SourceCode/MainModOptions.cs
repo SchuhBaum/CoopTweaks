@@ -18,7 +18,7 @@ namespace CoopTweaks
         public static Configurable<bool> regionGates = instance.config.Bind("regionGates", defaultValue: true, new ConfigurableInfo("When enabled, region gates don't wait for players to stand still.", null, "", "Region Gates"));
 
         public static Configurable<bool> slowMotion = instance.config.Bind("slowMotion", defaultValue: true, new ConfigurableInfo("When enabled, removes or reduces the slow motion effect in most situations. In addition, the mushroom effect is shared with other players.", null, "", "Slow Motion"));
-        public static Configurable<bool> slugcatCollision = instance.config.Bind("slugcatCollision", defaultValue: true, new ConfigurableInfo("When enabled, slugcats don't collide with each other.", null, "", "Slugcat Collision"));
+        public static Configurable<bool> slugcatCollision = instance.config.Bind("slugcatCollision", defaultValue: true, new ConfigurableInfo("When enabled, players and (most) things that they grab don't collide with each other.", null, "", "Slugcat Collision"));
         public static Configurable<bool> slugOnBack = instance.config.Bind("slugOnBack", defaultValue: true, new ConfigurableInfo("When enabled, you can only drop slugcats from your back when holding down and grab.", null, "", "SlugOnBack"));
 
         //
