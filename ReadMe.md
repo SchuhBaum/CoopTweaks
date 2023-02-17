@@ -5,6 +5,7 @@ This is a mod for Rain World v1.9.
 
 ### Description
 Includes various tweaks:
+- (Artificer Stun) Artificer's parry does not stun players.
 - (Deaf Beep) Mutes the tinnitus beep when near explosions.
 - (Item Blinking) Nearby items only blink even you can pick them up.
 - (Release Grasp) Other slugcats stop grabbing you when you press jump.
