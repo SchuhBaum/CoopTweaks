@@ -1,5 +1,5 @@
 ## CoopTweaks
-###### Version: 0.0.7
+###### Version: 0.0.8
 
 This is a mod for Rain World v1.9.
 
@@ -17,7 +17,7 @@ This mod is a port of the tweaks from the mod JollyCoopFixesAndStuff for Rain Wo
 
 ### Installation
 0. Update Rain World to version 1.9 if needed.
-1. Download the file  `CoopTweaks.zip` from [Releases](https://github.com/SchuhBaum/CoopTweaks/releases/tag/v0.0.7).
+1. Download the file  `CoopTweaks.zip` from [Releases](https://github.com/SchuhBaum/CoopTweaks/releases/tag/v0.0.8).
 2. Extract its content in the folder `[Steam]\SteamApps\common\Rain World\RainWorld_Data\StreamingAssets\mods`.
 3. Start the game as normal. In the main menu select `Remix` and enable the mod. 
 
@@ -32,7 +32,7 @@ If you have feedback, you can message me on Discord `@SchuhBaum#7246` or write a
 There are two licenses available - MIT and Unlicense. You can choose which one you want to use. 
 
 ### Changelog
-v0.0.7:
+v0.0.8:
 - Initial release.
 - (SlugOnBack) Removed the ability to directly throw slugcats from back.
 - (Slow Motion) Included the ReducedSlowMotion mod since it is a tweak from JollyCoopFixesAndStuff as well.

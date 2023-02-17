@@ -8,7 +8,7 @@ using UnityEngine;
 [assembly: SecurityPermission(SecurityAction.RequestMinimum, SkipVerification = true)]
 namespace CoopTweaks
 {
-    [BepInPlugin("SchuhBaum.CoopTweaks", "CoopTweaks", "0.0.7")]
+    [BepInPlugin("SchuhBaum.CoopTweaks", "CoopTweaks", "0.0.8")]
     public class MainMod : BaseUnityPlugin
     {
         //
@@ -17,17 +17,18 @@ namespace CoopTweaks
 
         public static readonly string MOD_ID = "CoopTweaks";
         public static readonly string author = "SchuhBaum";
-        public static readonly string version = "0.0.7";
+        public static readonly string version = "0.0.8";
 
         //
         // options
         //
 
+        public static bool Option_ArtificerStun => MainModOptions.artificerStun.Value;
         public static bool Option_DeafBeep => MainModOptions.deafBeep.Value;
         public static bool Option_ItemBlinking => MainModOptions.itemBlinking.Value;
         public static bool Option_ReleaseGrasp => MainModOptions.releaseGrasp.Value;
-        public static bool Option_RegionGates => MainModOptions.regionGates.Value;
 
+        public static bool Option_RegionGates => MainModOptions.regionGates.Value;
         public static bool Option_SlowMotion => MainModOptions.slowMotion.Value;
         public static bool Option_SlugcatCollision => MainModOptions.slugcatCollision.Value;
         public static bool Option_SlugOnBack => MainModOptions.slugOnBack.Value;

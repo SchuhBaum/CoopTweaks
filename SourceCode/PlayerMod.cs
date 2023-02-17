@@ -20,6 +20,19 @@ namespace CoopTweaks
         internal static void OnToggle()
         {
             isEnabled = !isEnabled;
+            if (MainMod.Option_ArtificerStun)
+            {
+                if (isEnabled)
+                {
+                    // remove friendly fire stuns;
+                    IL.Player.ClassMechanicsArtificer += IL_Player_ClassMechanicsArtificer;
+                }
+                else
+                {
+                    IL.Player.ClassMechanicsArtificer -= IL_Player_ClassMechanicsArtificer;
+                }
+            }
+
             if (MainMod.Option_DeafBeep || MainMod.Option_ReleaseGrasp || MainMod.Option_SlowMotion || MainMod.Option_SlugOnBack)
             {
                 if (isEnabled)
@@ -97,6 +110,63 @@ namespace CoopTweaks
         //
         // private
         //
+
+        private static void IL_Player_ClassMechanicsArtificer(ILContext context)
+        {
+            // MainMod.LogAllInstructions(context);
+
+            ILCursor cursor = new(context);
+
+            // skip the stun and knock-back
+            // if (cursor.TryGotoNext(instruction => instruction.MatchCallvirt<Room>("VisualContact")))
+            // {
+            //     Debug.Log("CoopTweaks: IL_Player_ClassMechanicsArtificer: Index " + cursor.Index); // 907
+
+            //     cursor.Goto(cursor.Index - 3); // 904
+            //     object creature = cursor.Next.Operand;
+
+            //     cursor.Goto(cursor.Index + 5); // 909
+            //     object label = cursor.Prev.Operand;
+
+            //     // change instead of Emit such that the label target to 909 is preserved;
+            //     cursor.Next.OpCode = OpCodes.Ldloc_S;
+            //     cursor.Next.Operand = creature;
+
+            //     // skip stun and push back when creature is player;
+            //     cursor.Goto(cursor.Index + 1);
+            //     cursor.EmitDelegate<Func<Creature, bool>>(creature => creature is Player);
+            //     cursor.Emit(OpCodes.Brtrue, label);
+
+            //     // restore vanilla since this was changed to creature before;
+            //     cursor.Emit(OpCodes.Ldarg_0);
+            // }
+            // else
+            // {
+            //     Debug.LogException(new Exception("CoopTweaks: IL_Player_ClassMechanicsArtificer failed."));
+            // }
+
+            // skip only the stun but not the knock-back;
+            if (cursor.TryGotoNext(instruction => instruction.MatchIsinst("Scavenger")))
+            {
+                Debug.Log("CoopTweaks: IL_Player_ClassMechanicsArtificer: Index " + cursor.Index); // 922
+
+                cursor.Goto(cursor.Index + 7); // 929
+                object label = cursor.Prev.Operand;
+                object creature = cursor.Next.Operand;
+
+                cursor.Goto(cursor.Index + 1);
+                cursor.Emit(OpCodes.Isinst, typeof(Player));
+                cursor.Emit(OpCodes.Brtrue, label);
+
+                // restore vanilla since this was re-used for the type check;
+                cursor.Emit(OpCodes.Ldloc_S, creature);
+            }
+            else
+            {
+                Debug.LogException(new Exception("CoopTweaks: IL_Player_ClassMechanicsArtificer failed."));
+            }
+            // MainMod.LogAllInstructions(context);
+        }
 
         private static void IL_Player_GrabUpdate(ILContext context)
         {
