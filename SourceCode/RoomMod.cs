@@ -105,35 +105,42 @@ namespace CoopTweaks
             foreach (Creature creatureA in creaturesInRoomList)
             {
                 creatureA.CollideWithObjects = true;
+
+                // they might get removed during orig();
+                if (creatureA.room != room) continue;
+
                 foreach (PhysicalObject physicalObjectB in room.physicalObjects[creatureA.collisionLayer])
                 {
                     // disable collision of players and creatures that they are carrying;
                     // including creatures that backPlayers are carrying;
-                    if ((physicalObjectB is not Creature creatureB || !creaturesInRoomList.Contains(creatureB)) && Mathf.Abs(creatureA.bodyChunks[0].pos.x - physicalObjectB.bodyChunks[0].pos.x) < creatureA.collisionRange + physicalObjectB.collisionRange && Mathf.Abs(creatureA.bodyChunks[0].pos.y - physicalObjectB.bodyChunks[0].pos.y) < creatureA.collisionRange + physicalObjectB.collisionRange)
                     {
-                        bool hasCollided = false;
-                        bool isGrabbed = false;
+                        if ((physicalObjectB is Creature creatureB && creaturesInRoomList.Contains(creatureB)) || Mathf.Abs(creatureA.bodyChunks[0].pos.x - physicalObjectB.bodyChunks[0].pos.x) >= creatureA.collisionRange + physicalObjectB.collisionRange || Mathf.Abs(creatureA.bodyChunks[0].pos.y - physicalObjectB.bodyChunks[0].pos.y) >= creatureA.collisionRange + physicalObjectB.collisionRange) continue;
+                    }
 
-                        // is grabbing;
-                        // only remaining case where this is needed is when
-                        // the player drags a creature;
-                        if (creatureA.Template.grasps > 0)
+                    bool hasCollided = false;
+                    bool isGrabbed = false;
+
+                    // is grabbing;
+                    // only remaining case where this is needed is when
+                    // the player drags a creature;
+                    if (creatureA.Template.grasps > 0)
+                    {
+                        foreach (Creature.Grasp? grasp in creatureA.grasps)
                         {
-                            foreach (Creature.Grasp? grasp in creatureA.grasps)
+                            if (grasp != null && grasp.grabbed == physicalObjectB)
                             {
-                                if (grasp != null && grasp.grabbed == physicalObjectB)
-                                {
-                                    isGrabbed = true;
-                                    break;
-                                }
+                                isGrabbed = true;
+                                break;
                             }
                         }
+                    }
 
+                    {
                         // is being grabbed;
                         // creatureB_.Template.grasps > 0 takes also care of creatureB_.grasps != null;
-                        if (!isGrabbed && physicalObjectB is Creature creatureB_ && creatureB_.Template.grasps > 0)
+                        if (!isGrabbed && physicalObjectB is Creature creatureB && creatureB.Template.grasps > 0)
                         {
-                            foreach (Creature.Grasp? grasp in creatureB_.grasps)
+                            foreach (Creature.Grasp? grasp in creatureB.grasps)
                             {
                                 if (grasp != null && grasp.grabbed == creatureA)
                                 {
@@ -142,39 +149,37 @@ namespace CoopTweaks
                                 }
                             }
                         }
+                    }
 
-                        if (!isGrabbed)
+                    if (isGrabbed) continue;
+                    foreach (BodyChunk playerBodyChunk in creatureA.bodyChunks)
+                    {
+                        foreach (BodyChunk pOBodyChunk in physicalObjectB.bodyChunks)
                         {
-                            foreach (BodyChunk playerBodyChunk in creatureA.bodyChunks)
+                            if (playerBodyChunk.collideWithObjects && pOBodyChunk.collideWithObjects && Custom.DistLess(playerBodyChunk.pos, pOBodyChunk.pos, playerBodyChunk.rad + pOBodyChunk.rad))
                             {
-                                foreach (BodyChunk pOBodyChunk in physicalObjectB.bodyChunks)
+                                float radiusCombined = playerBodyChunk.rad + pOBodyChunk.rad;
+                                float distance = Vector2.Distance(playerBodyChunk.pos, pOBodyChunk.pos);
+                                Vector2 direction = Custom.DirVec(playerBodyChunk.pos, pOBodyChunk.pos);
+                                float massProportion = pOBodyChunk.mass / (playerBodyChunk.mass + pOBodyChunk.mass);
+
+                                playerBodyChunk.pos -= (radiusCombined - distance) * direction * massProportion;
+                                playerBodyChunk.vel -= (radiusCombined - distance) * direction * massProportion;
+                                pOBodyChunk.pos += (radiusCombined - distance) * direction * (1f - massProportion);
+                                pOBodyChunk.vel += (radiusCombined - distance) * direction * (1f - massProportion);
+
+                                if (playerBodyChunk.pos.x == pOBodyChunk.pos.x)
                                 {
-                                    if (playerBodyChunk.collideWithObjects && pOBodyChunk.collideWithObjects && Custom.DistLess(playerBodyChunk.pos, pOBodyChunk.pos, playerBodyChunk.rad + pOBodyChunk.rad))
-                                    {
-                                        float radiusCombined = playerBodyChunk.rad + pOBodyChunk.rad;
-                                        float distance = Vector2.Distance(playerBodyChunk.pos, pOBodyChunk.pos);
-                                        Vector2 direction = Custom.DirVec(playerBodyChunk.pos, pOBodyChunk.pos);
-                                        float massProportion = pOBodyChunk.mass / (playerBodyChunk.mass + pOBodyChunk.mass);
-
-                                        playerBodyChunk.pos -= (radiusCombined - distance) * direction * massProportion;
-                                        playerBodyChunk.vel -= (radiusCombined - distance) * direction * massProportion;
-                                        pOBodyChunk.pos += (radiusCombined - distance) * direction * (1f - massProportion);
-                                        pOBodyChunk.vel += (radiusCombined - distance) * direction * (1f - massProportion);
-
-                                        if (playerBodyChunk.pos.x == pOBodyChunk.pos.x)
-                                        {
-                                            playerBodyChunk.vel += Custom.DegToVec(Random.value * 360f) * 0.0001f;
-                                            pOBodyChunk.vel += Custom.DegToVec(Random.value * 360f) * 0.0001f;
-                                        }
-
-                                        if (!hasCollided)
-                                        {
-                                            creatureA.Collide(physicalObjectB, playerBodyChunk.index, pOBodyChunk.index);
-                                            physicalObjectB.Collide(creatureA, pOBodyChunk.index, playerBodyChunk.index);
-                                        }
-                                        hasCollided = true;
-                                    }
+                                    playerBodyChunk.vel += Custom.DegToVec(Random.value * 360f) * 0.0001f;
+                                    pOBodyChunk.vel += Custom.DegToVec(Random.value * 360f) * 0.0001f;
                                 }
+
+                                if (!hasCollided)
+                                {
+                                    creatureA.Collide(physicalObjectB, playerBodyChunk.index, pOBodyChunk.index);
+                                    physicalObjectB.Collide(creatureA, pOBodyChunk.index, playerBodyChunk.index);
+                                }
+                                hasCollided = true;
                             }
                         }
                     }
