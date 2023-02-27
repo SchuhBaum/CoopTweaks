@@ -5,7 +5,7 @@ This is a mod for Rain World v1.9.
 
 ### Description
 Includes various tweaks:
-- (Artificer Stun) Artificer's parry does not stun players. But it does knock them back even when JollyCoop's friendly fire is turned off.
+- (Artificer Stun) Artificer's parry does not stun players. But it does knock them back even when JollyCoop's friendly fire setting is turned off.
 - (Deaf Beep) Mutes the tinnitus beep when near explosions.
 - (Item Blinking) Nearby items only blink even you can pick them up.
 - (Release Grasp) Other slugcats stop grabbing you when you press jump.

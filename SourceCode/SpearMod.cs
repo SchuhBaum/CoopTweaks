@@ -1,3 +1,5 @@
+using static CoopTweaks.MainMod;
+
 namespace CoopTweaks;
 
 internal static class SpearMod
@@ -15,7 +17,7 @@ internal static class SpearMod
     internal static void OnToggle()
     {
         isEnabled = !isEnabled;
-        if (MainMod.Option_SlowMotion)
+        if (Option_SlowMotion)
         {
             if (isEnabled)
             {

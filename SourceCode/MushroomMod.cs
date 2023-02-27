@@ -1,46 +1,47 @@
-namespace CoopTweaks
+using static CoopTweaks.MainMod;
+
+namespace CoopTweaks;
+
+internal static class MushroomMod
 {
-    internal static class MushroomMod
+    //
+    // variables
+    //
+
+    private static bool isEnabled = false;
+
+    //
+    //
+    //
+
+    internal static void OnToggle()
     {
-        //
-        // variables
-        //
-
-        private static bool isEnabled = false;
-
-        //
-        //
-        //
-
-        internal static void OnToggle()
+        isEnabled = !isEnabled;
+        if (Option_SlowMotion)
         {
-            isEnabled = !isEnabled;
-            if (MainMod.Option_SlowMotion)
+            if (isEnabled)
             {
-                if (isEnabled)
-                {
-                    On.Mushroom.BitByPlayer += Mushroom_BitByPlayer; // share mushroom effect;
-                }
-                else
-                {
-                    On.Mushroom.BitByPlayer -= Mushroom_BitByPlayer;
-                }
+                On.Mushroom.BitByPlayer += Mushroom_BitByPlayer; // share mushroom effect;
+            }
+            else
+            {
+                On.Mushroom.BitByPlayer -= Mushroom_BitByPlayer;
             }
         }
+    }
 
-        //
-        // private
-        //
+    //
+    // private
+    //
 
-        private static void Mushroom_BitByPlayer(On.Mushroom.orig_BitByPlayer orig, Mushroom mushroom, Creature.Grasp? grasp, bool eu) // MainMod.Option_SlowMotion
+    private static void Mushroom_BitByPlayer(On.Mushroom.orig_BitByPlayer orig, Mushroom mushroom, Creature.Grasp? grasp, bool eu) // Option_SlowMotion
+    {
+        orig(mushroom, grasp, eu);
+        foreach (AbstractCreature abstractPlayer in mushroom.abstractPhysicalObject.world.game.Players) // mushroom.room is null when in room transition // doesn't matter in this case
         {
-            orig(mushroom, grasp, eu);
-            foreach (AbstractCreature abstractPlayer in mushroom.abstractPhysicalObject.world.game.Players) // mushroom.room is null when in room transition // doesn't matter in this case
+            if (abstractPlayer.realizedCreature is Player player && player != grasp?.grabber)
             {
-                if (abstractPlayer.realizedCreature is Player player && player != grasp?.grabber)
-                {
-                    player.mushroomCounter += 320;
-                }
+                player.mushroomCounter += 320;
             }
         }
     }
