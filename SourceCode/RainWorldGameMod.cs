@@ -107,19 +107,20 @@ namespace CoopTweaks
         }
 
         //
-        // private
+        //
         //
 
         private static void RainWorldGame_ctor(On.RainWorldGame.orig_ctor orig, RainWorldGame game, ProcessManager manager)
         {
             Debug.Log("CoopTweaks: Add option specific hooks.");
-            MainModOptions.instance.MainModOptions_OnConfigChanged();
 
             MushroomMod.OnToggle();
             PlayerMod.OnToggle();
             RegionGateMod.OnToggle();
+
             RainWorldGameMod.OnToggle();
             RoomMod.OnToggle();
+            SpearMod.OnToggle();
 
             orig(game, manager);
         }
@@ -132,8 +133,10 @@ namespace CoopTweaks
             MushroomMod.OnToggle();
             PlayerMod.OnToggle();
             RegionGateMod.OnToggle();
+
             RainWorldGameMod.OnToggle();
             RoomMod.OnToggle();
+            SpearMod.OnToggle();
         }
     }
 }

@@ -3,6 +3,8 @@ using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using UnityEngine;
 
+using static CoopTweaks.MainMod;
+
 namespace CoopTweaks
 {
     internal static class PlayerMod
@@ -20,11 +22,15 @@ namespace CoopTweaks
         internal static void OnToggle()
         {
             isEnabled = !isEnabled;
-            if (MainMod.Option_ArtificerStun)
+            if (Option_ArtificerStun)
             {
                 if (isEnabled)
                 {
                     // remove friendly fire stuns;
+                    // they added this in v1.9.06;
+                    // the only real difference is that this works in Arena as well;
+                    // and you can have spear friendly fire enabled;
+                    // also I don't remove the knock-back;
                     IL.Player.ClassMechanicsArtificer += IL_Player_ClassMechanicsArtificer;
                 }
                 else
@@ -33,7 +39,7 @@ namespace CoopTweaks
                 }
             }
 
-            if (MainMod.Option_DeafBeep || MainMod.Option_ReleaseGrasp || MainMod.Option_SlowMotion || MainMod.Option_SlugOnBack)
+            if (Option_DeafBeep || Option_ReleaseGrasp || Option_SlowMotion || Option_SlugOnBack)
             {
                 if (isEnabled)
                 {
@@ -49,7 +55,7 @@ namespace CoopTweaks
                 }
             }
 
-            if (MainMod.Option_ItemBlinking)
+            if (Option_ItemBlinking)
             {
                 if (isEnabled)
                 {
@@ -61,7 +67,7 @@ namespace CoopTweaks
                 }
             }
 
-            if (MainMod.Option_SlowMotion)
+            if (Option_SlowMotion)
             {
                 if (isEnabled)
                 {
@@ -73,7 +79,7 @@ namespace CoopTweaks
                 }
             }
 
-            if (MainMod.Option_SlugOnBack)
+            if (Option_SlugOnBack)
             {
                 if (isEnabled)
                 {
@@ -92,7 +98,6 @@ namespace CoopTweaks
 
         public static void SynchronizeMushroomCounter(Player player)
         {
-            if (player.mushroomCounter <= 0) return;
             if (player.inShortcut) return;
 
             // synchronize with other player;
@@ -113,7 +118,7 @@ namespace CoopTweaks
 
         private static void IL_Player_ClassMechanicsArtificer(ILContext context)
         {
-            // MainMod.LogAllInstructions(context);
+            // LogAllInstructions(context);
 
             ILCursor cursor = new(context);
 
@@ -145,6 +150,23 @@ namespace CoopTweaks
             //     Debug.LogException(new Exception("CoopTweaks: IL_Player_ClassMechanicsArtificer failed."));
             // }
 
+            // ignore the coop friendly fire setting;
+            // otherwise the knock back might be skipped as well;
+            if (cursor.TryGotoNext(instruction => instruction.MatchLdsfld<ModManager>("CoopAvailable")))
+            {
+                Debug.Log("CoopTweaks: IL_Player_ClassMechanicsArtificer: Index " + cursor.Index); // 861
+
+                cursor.Goto(cursor.Index + 1);
+
+                cursor.Prev.OpCode = OpCodes.Br;
+                cursor.Prev.Operand = cursor.Next.Operand; // label
+                cursor.RemoveRange(1);
+            }
+            else
+            {
+                Debug.LogException(new Exception("CoopTweaks: IL_Player_ClassMechanicsArtificer failed."));
+            }
+
             // skip only the stun but not the knock-back;
             if (cursor.TryGotoNext(instruction => instruction.MatchIsinst("Scavenger")))
             {
@@ -165,12 +187,12 @@ namespace CoopTweaks
             {
                 Debug.LogException(new Exception("CoopTweaks: IL_Player_ClassMechanicsArtificer failed."));
             }
-            // MainMod.LogAllInstructions(context);
+            // LogAllInstructions(context);
         }
 
         private static void IL_Player_GrabUpdate(ILContext context)
         {
-            // MainMod.LogAllInstructions(context);
+            // LogAllInstructions(context);
 
             ILCursor cursor = new(context);
             if (cursor.TryGotoNext(instruction => instruction.MatchCallvirt<Player.SlugOnBack>("SlugToHand")))
@@ -184,14 +206,14 @@ namespace CoopTweaks
             {
                 Debug.LogException(new Exception("CoopTweaks: IL_Player_GrabUpdate failed."));
             }
-            // MainMod.LogAllInstructions(context);
+            // LogAllInstructions(context);
         }
 
         //
         //
         //
 
-        private static void Player_BiteEdibleObject(On.Player.orig_BiteEdibleObject orig, Player player, bool eu) // MainMod.Option_SlowMotion
+        private static void Player_BiteEdibleObject(On.Player.orig_BiteEdibleObject orig, Player player, bool eu) // Option_SlowMotion
         {
             foreach (Creature.Grasp? grasp in player.grasps)
             {
@@ -214,7 +236,7 @@ namespace CoopTweaks
             return orig(player, physicalObject);
         }
 
-        private static void Player_Update(On.Player.orig_Update orig, Player player, bool eu) // MainMod.Option_DeafBeep // MainMod.Option_ReleaseGrasp // MainMod.Option_SlowMotion // MainMod.Option_SlugOnBack
+        private static void Player_Update(On.Player.orig_Update orig, Player player, bool eu) // Option_DeafBeep // Option_ReleaseGrasp // Option_SlowMotion // Option_SlugOnBack
         {
             if (player.isNPC)
             {
@@ -222,13 +244,13 @@ namespace CoopTweaks
                 return;
             }
 
-            if (MainMod.Option_DeafBeep)
+            if (Option_DeafBeep)
             {
                 player.deaf = 0; // this sound loop can get stuck // disable for now
             }
             orig(player, eu);
 
-            if (player.input[0].jmp && !player.input[1].jmp && player.grabbedBy?.Count > 0 && MainMod.Option_ReleaseGrasp)
+            if (player.input[0].jmp && !player.input[1].jmp && player.grabbedBy?.Count > 0 && Option_ReleaseGrasp)
             {
                 for (int graspIndex = player.grabbedBy.Count - 1; graspIndex >= 0; graspIndex--)
                 {
@@ -239,12 +261,12 @@ namespace CoopTweaks
                 }
             }
 
-            if (MainMod.Option_SlowMotion)
+            if (Option_SlowMotion)
             {
                 SynchronizeMushroomCounter(player);
             }
 
-            if (player.slugOnBack.HasASlug && player.input[0].y != -1 && MainMod.Option_SlugOnBack)
+            if (player.slugOnBack.HasASlug && player.input[0].y != -1 && Option_SlugOnBack)
             {
                 player.slugOnBack.increment = false;
             }

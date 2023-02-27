@@ -1,11 +1,11 @@
 ## CoopTweaks
-###### Version: 0.0.9
+###### Version: 0.1.0
 
 This is a mod for Rain World v1.9.
 
 ### Description
 Includes various tweaks:
-- (Artificer Stun) Artificer's parry does not stun players.
+- (Artificer Stun) Artificer's parry does not stun players. But it does knock them back even when JollyCoop's friendly fire is turned off.
 - (Deaf Beep) Mutes the tinnitus beep when near explosions.
 - (Item Blinking) Nearby items only blink even you can pick them up.
 - (Release Grasp) Other slugcats stop grabbing you when you press jump.
@@ -18,7 +18,7 @@ This mod is a port of the tweaks from the mod JollyCoopFixesAndStuff for Rain Wo
 
 ### Installation
 0. Update Rain World to version 1.9 if needed.
-1. Download the file  `CoopTweaks.zip` from [Releases](https://github.com/SchuhBaum/CoopTweaks/releases/tag/v0.0.9).
+1. Download the file  `CoopTweaks.zip` from [Releases](https://github.com/SchuhBaum/CoopTweaks/releases/tag/v0.1.0).
 2. Extract its content in the folder `[Steam]\SteamApps\common\Rain World\RainWorld_Data\StreamingAssets\mods`.
 3. Start the game as normal. In the main menu select `Remix` and enable the mod. 
 
@@ -33,7 +33,7 @@ If you have feedback, you can message me on Discord `@SchuhBaum#7246` or write a
 There are two licenses available - MIT and Unlicense. You can choose which one you want to use. 
 
 ### Changelog
-v0.0.9:
+v0.1.0:
 - Initial release.
 - (SlugOnBack) Removed the ability to directly throw slugcats from back.
 - (Slow Motion) Included the ReducedSlowMotion mod since it is a tweak from JollyCoopFixesAndStuff as well.
@@ -42,3 +42,5 @@ v0.0.9:
 - (Deaf Beep) This option was not visible in the Remix options menu.
 - Fixed a bug where slugcat npcs would crash the game.
 - (Slugcat Collision) Fixed a bug when one of the slugcats would be removed from the room before the collision checks were done.
+- (Slow Motion) Fixed a bug where the mushroom counter was not shared when using spearmaster.
+- (Artificer Stun) When enabled, ignores JollyCoop's friendly fire setting. Otherwise the knock-back might be ignored as well.

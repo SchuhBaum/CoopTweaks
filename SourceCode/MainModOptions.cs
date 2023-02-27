@@ -12,7 +12,7 @@ namespace CoopTweaks
         // options
         //
 
-        public static Configurable<bool> artificerStun = instance.config.Bind("artificerStun", defaultValue: true, new ConfigurableInfo("When enabled, Artificer's parry does not stun players.", null, "", "Artificer Stun"));
+        public static Configurable<bool> artificerStun = instance.config.Bind("artificerStun", defaultValue: true, new ConfigurableInfo("When enabled, Artificer's parry does not stun players. But it does knock them back even when JollyCoop's friendly fire is turned off.", null, "", "Artificer Stun"));
         public static Configurable<bool> deafBeep = instance.config.Bind("deafBeep", defaultValue: true, new ConfigurableInfo("When enabled, mutes the tinnitus beep when near explosions.", null, "", "Deaf Beep"));
         public static Configurable<bool> itemBlinking = instance.config.Bind("itemBlinking", defaultValue: true, new ConfigurableInfo("When enabled, nearby items only blink even you can pick them up.", null, "", "Item Blinking"));
         public static Configurable<bool> releaseGrasp = instance.config.Bind("releaseGrasp", defaultValue: true, new ConfigurableInfo("When enabled, other slugcats stop grabbing you when you press jump.", null, "", "Release Grasp"));
@@ -48,11 +48,7 @@ namespace CoopTweaks
         // main
         //
 
-        public MainModOptions()
-        {
-            // ambiguity error // why? TODO
-            // OnConfigChanged += MainModOptions_OnConfigChanged;
-        }
+        public MainModOptions() => OnConfigChanged += MainModOptions_OnConfigChanged;
 
         //
         // public
