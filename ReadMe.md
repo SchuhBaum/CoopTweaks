@@ -1,5 +1,5 @@
 ## CoopTweaks
-###### Version: 0.1.0
+###### Version: 0.1.1
 
 This is a mod for Rain World v1.9.
 
@@ -18,7 +18,7 @@ This mod is a port of the tweaks from the mod JollyCoopFixesAndStuff for Rain Wo
 
 ### Installation
 0. Update Rain World to version 1.9 if needed.
-1. Download the file  `CoopTweaks.zip` from [Releases](https://github.com/SchuhBaum/CoopTweaks/releases/tag/v0.1.0).
+1. Download the file  `CoopTweaks.zip` from [Releases](https://github.com/SchuhBaum/CoopTweaks/releases/tag/v0.1.1).
 2. Extract its content in the folder `[Steam]\SteamApps\common\Rain World\RainWorld_Data\StreamingAssets\mods`.
 3. Start the game as normal. In the main menu select `Remix` and enable the mod. 
 
@@ -44,3 +44,6 @@ v0.1.0:
 - (Slugcat Collision) Fixed a bug when one of the slugcats would be removed from the room before the collision checks were done.
 - (Slow Motion) Fixed a bug where the mushroom counter was not shared when using spearmaster.
 - (Artificer Stun) When enabled, ignores JollyCoop's friendly fire setting. Otherwise the knock-back might be ignored as well.
+
+v0.1.1:
+- (Item Blinking) Fixed a bug where spearmaster could not put spears directly to its back.

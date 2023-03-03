@@ -226,14 +226,21 @@ internal static class PlayerMod
         orig(player, eu);
     }
 
-    private static bool Player_CanIPickThisUp(On.Player.orig_CanIPickThisUp orig, Player player, PhysicalObject physicalObject)
+    private static bool Player_CanIPickThisUp(On.Player.orig_CanIPickThisUp orig, Player player, PhysicalObject physical_object)
     {
-        Player.ObjectGrabability objectGrabability = player.Grabability(physicalObject);
-        bool canGrabOneHanded = player.grasps[0] == null || player.grasps[1] == null;
+        Player.ObjectGrabability object_grabability = player.Grabability(physical_object);
+        bool both_hands_are_full = player.grasps[0] != null && player.grasps[1] != null;
 
-        if (objectGrabability == Player.ObjectGrabability.OneHand && !canGrabOneHanded) return false;
-        else if (objectGrabability == Player.ObjectGrabability.BigOneHand && !player.CanPutSpearToBack && (!canGrabOneHanded || player.grasps[0]?.grabbed is Spear || player.grasps[1]?.grabbed is Spear)) return false;
-        return orig(player, physicalObject);
+        if (object_grabability == Player.ObjectGrabability.OneHand && both_hands_are_full)
+        {
+            // spearmaster can grab spears with one hand;
+            // this is a perk in Expedition as well;
+            if (physical_object is Spear && player.CanPutSpearToBack) return orig(player, physical_object);
+            return false;
+        }
+
+        if (object_grabability == Player.ObjectGrabability.BigOneHand && !player.CanPutSpearToBack && (both_hands_are_full || player.grasps[0]?.grabbed is Spear || player.grasps[1]?.grabbed is Spear)) return false;
+        return orig(player, physical_object);
     }
 
     private static void Player_Update(On.Player.orig_Update orig, Player player, bool eu) // Option_DeafBeep // Option_ReleaseGrasp // Option_SlowMotion // Option_SlugOnBack
