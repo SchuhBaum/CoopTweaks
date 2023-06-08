@@ -1,10 +1,11 @@
 {
   "id": "CoopTweaks",
   "name": "CoopTweaks",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "authors": "SchuhBaum",
   "description": "Includes various tweaks. Each tweak can be turned off in the Remix options menu.",
   "requirements": [],
   "requirements_names": [],
+  "tags": [ "Accessibility", "Game Mechanics" ],
   "checksum_override_version": false
 }

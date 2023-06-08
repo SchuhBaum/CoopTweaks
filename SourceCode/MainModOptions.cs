@@ -3,26 +3,27 @@ using Menu.Remix.MixedUI;
 using UnityEngine;
 
 using static CoopTweaks.MainMod;
+using static CoopTweaks.ProcessManagerMod;
 
 namespace CoopTweaks;
 
 public class MainModOptions : OptionInterface
 {
-    public static MainModOptions instance = new();
+    public static MainModOptions main_mod_options = new();
 
     //
     // options
     //
 
-    public static Configurable<bool> artificerStun = instance.config.Bind("artificerStun", defaultValue: true, new ConfigurableInfo("When enabled, Artificer's parry does not stun players. But it does knock them back even when JollyCoop's friendly fire setting is turned off.", null, "", "Artificer Stun"));
-    public static Configurable<bool> deafBeep = instance.config.Bind("deafBeep", defaultValue: true, new ConfigurableInfo("When enabled, mutes the tinnitus beep when near explosions.", null, "", "Deaf Beep"));
-    public static Configurable<bool> itemBlinking = instance.config.Bind("itemBlinking", defaultValue: true, new ConfigurableInfo("When enabled, nearby items only blink even you can pick them up.", null, "", "Item Blinking"));
-    public static Configurable<bool> releaseGrasp = instance.config.Bind("releaseGrasp", defaultValue: true, new ConfigurableInfo("When enabled, other slugcats stop grabbing you when you press jump.", null, "", "Release Grasp"));
+    public static Configurable<bool> artificerStun = main_mod_options.config.Bind("artificerStun", defaultValue: true, new ConfigurableInfo("When enabled, Artificer's parry does not stun players. But it does knock them back even when JollyCoop's friendly fire setting is turned off.", null, "", "Artificer Stun"));
+    public static Configurable<bool> deafBeep = main_mod_options.config.Bind("deafBeep", defaultValue: true, new ConfigurableInfo("When enabled, mutes the tinnitus beep when near explosions.", null, "", "Deaf Beep"));
+    public static Configurable<bool> itemBlinking = main_mod_options.config.Bind("itemBlinking", defaultValue: true, new ConfigurableInfo("When enabled, nearby items only blink even you can pick them up.", null, "", "Item Blinking"));
+    public static Configurable<bool> releaseGrasp = main_mod_options.config.Bind("releaseGrasp", defaultValue: true, new ConfigurableInfo("When enabled, other slugcats stop grabbing you when you press jump.", null, "", "Release Grasp"));
 
-    public static Configurable<bool> regionGates = instance.config.Bind("regionGates", defaultValue: true, new ConfigurableInfo("When enabled, region gates don't wait for players to stand still.", null, "", "Region Gates"));
-    public static Configurable<bool> slowMotion = instance.config.Bind("slowMotion", defaultValue: true, new ConfigurableInfo("When enabled, removes or reduces the slow motion effect in most situations. In addition, the mushroom effect is shared with other players.", null, "", "Slow Motion"));
-    public static Configurable<bool> slugcatCollision = instance.config.Bind("slugcatCollision", defaultValue: true, new ConfigurableInfo("When enabled, players and (most) things that they grab don't collide with each other.", null, "", "Slugcat Collision"));
-    public static Configurable<bool> slugOnBack = instance.config.Bind("slugOnBack", defaultValue: true, new ConfigurableInfo("When enabled, you can only drop slugcats from your back when holding down and grab.", null, "", "SlugOnBack"));
+    public static Configurable<bool> regionGates = main_mod_options.config.Bind("regionGates", defaultValue: true, new ConfigurableInfo("When enabled, region gates don't wait for players to stand still.", null, "", "Region Gates"));
+    public static Configurable<bool> slowMotion = main_mod_options.config.Bind("slowMotion", defaultValue: true, new ConfigurableInfo("When enabled, removes or reduces the slow motion effect in most situations. In addition, the mushroom effect is shared with other players.", null, "", "Slow Motion"));
+    public static Configurable<bool> slugcatCollision = main_mod_options.config.Bind("slugcatCollision", defaultValue: true, new ConfigurableInfo("When enabled, players and (most) things that they grab don't collide with each other.", null, "", "Slugcat Collision"));
+    public static Configurable<bool> slugOnBack = main_mod_options.config.Bind("slugOnBack", defaultValue: true, new ConfigurableInfo("When enabled, you can only drop slugcats from your back when holding down and grab.", null, "", "SlugOnBack"));
 
     //
     // parameters
@@ -50,7 +51,25 @@ public class MainModOptions : OptionInterface
     // main
     //
 
-    public MainModOptions() => OnConfigChanged += MainModOptions_OnConfigChanged;
+    private MainModOptions()
+    {
+        On.OptionInterface._SaveConfigFile -= Save_Config_File;
+        On.OptionInterface._SaveConfigFile += Save_Config_File;
+    }
+
+    private void Save_Config_File(On.OptionInterface.orig__SaveConfigFile orig, OptionInterface option_interface)
+    {
+        // the event OnConfigChange is triggered too often;
+        // it is triggered when you click on the mod name in the
+        // remix menu;
+        // initializing the hooks takes like half a second;
+        // I don't want to do that too often;
+
+        orig(option_interface);
+        if (option_interface != main_mod_options) return;
+        Debug.Log("CoopTweaks: Save_Config_File.");
+        Initialize_Option_Specific_Hooks();
+    }
 
     //
     // public
@@ -93,7 +112,7 @@ public class MainModOptions : OptionInterface
         DrawBox(ref Tabs[0]);
     }
 
-    public void MainModOptions_OnConfigChanged()
+    public void Log_All_Options()
     {
         Debug.Log("CoopTweaks: Option_DeafBeep " + Option_DeafBeep);
         Debug.Log("CoopTweaks: Option_ArtificerStun " + Option_ArtificerStun);

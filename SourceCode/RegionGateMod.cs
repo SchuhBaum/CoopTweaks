@@ -5,28 +5,16 @@ namespace CoopTweaks;
 internal static class RegionGateMod
 {
     //
-    // variables
+    // main
     //
 
-    private static bool isEnabled = false;
-
-    //
-    //
-    //
-
-    internal static void OnToggle()
+    internal static void On_Config_Changed()
     {
-        isEnabled = !isEnabled;
+        On.RegionGate.PlayersStandingStill -= RegionGate_PlayersStandingStill;
+
         if (Option_RegionGates)
         {
-            if (isEnabled)
-            {
-                On.RegionGate.PlayersStandingStill += RegionGate_PlayersStandingStill; // ignore inputs
-            }
-            else
-            {
-                On.RegionGate.PlayersStandingStill -= RegionGate_PlayersStandingStill;
-            }
+            On.RegionGate.PlayersStandingStill += RegionGate_PlayersStandingStill; // ignore inputs
         }
     }
 

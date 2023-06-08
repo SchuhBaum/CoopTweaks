@@ -1,4 +1,3 @@
-using System;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using UnityEngine;
@@ -10,85 +9,50 @@ namespace CoopTweaks;
 internal static class PlayerMod
 {
     //
-    // variables
+    // main
     //
 
-    private static bool isEnabled = false;
-
-    //
-    //
-    //
-
-    internal static void OnToggle()
+    internal static void On_Config_Changed()
     {
-        isEnabled = !isEnabled;
+        IL.Player.ClassMechanicsArtificer -= IL_Player_ClassMechanicsArtificer;
+        IL.Player.GrabUpdate -= IL_Player_GrabUpdate;
+
+        On.Player.BiteEdibleObject -= Player_BiteEdibleObject;
+        On.Player.CanIPickThisUp -= Player_CanIPickThisUp;
+        On.Player.Update -= Player_Update;
+
         if (Option_ArtificerStun)
         {
-            if (isEnabled)
-            {
-                // remove friendly fire stuns;
-                // they added this in v1.9.06;
-                // the only real difference is that this works in Arena as well;
-                // and you can have spear friendly fire enabled;
-                // also I don't remove the knock-back;
-                IL.Player.ClassMechanicsArtificer += IL_Player_ClassMechanicsArtificer;
-            }
-            else
-            {
-                IL.Player.ClassMechanicsArtificer -= IL_Player_ClassMechanicsArtificer;
-            }
+            // remove friendly fire stuns;
+            // they added this in v1.9.06;
+            // the only real difference is that this works in Arena as well;
+            // and you can have spear friendly fire enabled;
+            // also I don't remove the knock-back;
+            IL.Player.ClassMechanicsArtificer += IL_Player_ClassMechanicsArtificer;
         }
 
         if (Option_DeafBeep || Option_ReleaseGrasp || Option_SlowMotion || Option_SlugOnBack)
         {
-            if (isEnabled)
-            {
-                // skip deaf beep;
-                // release grasp when pressing jump;
-                // sync mushroom counter between player;
-                // only drop player when holding down + grab;
-                On.Player.Update += Player_Update;
-            }
-            else
-            {
-                On.Player.Update -= Player_Update;
-            }
+            // skip deaf beep;
+            // release grasp when pressing jump;
+            // sync mushroom counter between player;
+            // only drop player when holding down + grab;
+            On.Player.Update += Player_Update;
         }
 
         if (Option_ItemBlinking)
         {
-            if (isEnabled)
-            {
-                On.Player.CanIPickThisUp += Player_CanIPickThisUp; // remove blinking when you cannot pickup items;
-            }
-            else
-            {
-                On.Player.CanIPickThisUp -= Player_CanIPickThisUp;
-            }
+            On.Player.CanIPickThisUp += Player_CanIPickThisUp; // remove blinking when you cannot pickup items;
         }
 
         if (Option_SlowMotion)
         {
-            if (isEnabled)
-            {
-                On.Player.BiteEdibleObject += Player_BiteEdibleObject; // adds eat sound to mushrooms;
-            }
-            else
-            {
-                On.Player.BiteEdibleObject -= Player_BiteEdibleObject;
-            }
+            On.Player.BiteEdibleObject += Player_BiteEdibleObject; // adds eat sound to mushrooms;
         }
 
         if (Option_SlugOnBack)
         {
-            if (isEnabled)
-            {
-                IL.Player.GrabUpdate += IL_Player_GrabUpdate; // remove ability to throw slugcats from back;
-            }
-            else
-            {
-                IL.Player.GrabUpdate -= IL_Player_GrabUpdate;
-            }
+            IL.Player.GrabUpdate += IL_Player_GrabUpdate; // remove ability to throw slugcats from back;
         }
     }
 
@@ -119,58 +83,38 @@ internal static class PlayerMod
     private static void IL_Player_ClassMechanicsArtificer(ILContext context)
     {
         // LogAllInstructions(context);
-
         ILCursor cursor = new(context);
-
-        // skip the stun and knock-back
-        // if (cursor.TryGotoNext(instruction => instruction.MatchCallvirt<Room>("VisualContact")))
-        // {
-        //     Debug.Log("CoopTweaks: IL_Player_ClassMechanicsArtificer: Index " + cursor.Index); // 907
-
-        //     cursor.Goto(cursor.Index - 3); // 904
-        //     object creature = cursor.Next.Operand;
-
-        //     cursor.Goto(cursor.Index + 5); // 909
-        //     object label = cursor.Prev.Operand;
-
-        //     // change instead of Emit such that the label target to 909 is preserved;
-        //     cursor.Next.OpCode = OpCodes.Ldloc_S;
-        //     cursor.Next.Operand = creature;
-
-        //     // skip stun and push back when creature is player;
-        //     cursor.Goto(cursor.Index + 1);
-        //     cursor.EmitDelegate<Func<Creature, bool>>(creature => creature is Player);
-        //     cursor.Emit(OpCodes.Brtrue, label);
-
-        //     // restore vanilla since this was changed to creature before;
-        //     cursor.Emit(OpCodes.Ldarg_0);
-        // }
-        // else
-        // {
-        //     Debug.LogException(new Exception("CoopTweaks: IL_Player_ClassMechanicsArtificer failed."));
-        // }
 
         // ignore the coop friendly fire setting;
         // otherwise the knock back might be skipped as well;
         if (cursor.TryGotoNext(instruction => instruction.MatchLdsfld<ModManager>("CoopAvailable")))
         {
-            Debug.Log("CoopTweaks: IL_Player_ClassMechanicsArtificer: Index " + cursor.Index); // 861
+            if (can_log_il_hooks)
+            {
+                Debug.Log("CoopTweaks: IL_Player_ClassMechanicsArtificer: Index " + cursor.Index); // 861
+            }
 
             cursor.Goto(cursor.Index + 1);
-
             cursor.Prev.OpCode = OpCodes.Br;
             cursor.Prev.Operand = cursor.Next.Operand; // label
             cursor.RemoveRange(1);
         }
         else
         {
-            Debug.LogException(new Exception("CoopTweaks: IL_Player_ClassMechanicsArtificer failed."));
+            if (can_log_il_hooks)
+            {
+                Debug.Log("CoopTweaks: IL_Player_ClassMechanicsArtificer failed.");
+            }
+            return;
         }
 
         // skip only the stun but not the knock-back;
         if (cursor.TryGotoNext(instruction => instruction.MatchIsinst("Scavenger")))
         {
-            Debug.Log("CoopTweaks: IL_Player_ClassMechanicsArtificer: Index " + cursor.Index); // 922
+            if (can_log_il_hooks)
+            {
+                Debug.Log("CoopTweaks: IL_Player_ClassMechanicsArtificer: Index " + cursor.Index); // 922
+            }
 
             cursor.Goto(cursor.Index + 7); // 929
             object label = cursor.Prev.Operand;
@@ -185,7 +129,11 @@ internal static class PlayerMod
         }
         else
         {
-            Debug.LogException(new Exception("CoopTweaks: IL_Player_ClassMechanicsArtificer failed."));
+            if (can_log_il_hooks)
+            {
+                Debug.Log("CoopTweaks: IL_Player_ClassMechanicsArtificer failed.");
+            }
+            return;
         }
         // LogAllInstructions(context);
     }
@@ -193,18 +141,25 @@ internal static class PlayerMod
     private static void IL_Player_GrabUpdate(ILContext context)
     {
         // LogAllInstructions(context);
-
         ILCursor cursor = new(context);
+
         if (cursor.TryGotoNext(instruction => instruction.MatchCallvirt<Player.SlugOnBack>("SlugToHand")))
         {
-            Debug.Log("CoopTweaks: IL_Player_GrabUpdate: Index " + cursor.Index); // 2497
+            if (can_log_il_hooks)
+            {
+                Debug.Log("CoopTweaks: IL_Player_GrabUpdate: Index " + cursor.Index); // 2497
+            }
 
             cursor.Goto(cursor.Index - 14); // 2483
             cursor.Emit(OpCodes.Br, cursor.Prev.Operand); // skip whole if statement;
         }
         else
         {
-            Debug.LogException(new Exception("CoopTweaks: IL_Player_GrabUpdate failed."));
+            if (can_log_il_hooks)
+            {
+                Debug.Log("CoopTweaks: IL_Player_GrabUpdate failed.");
+            }
+            return;
         }
         // LogAllInstructions(context);
     }

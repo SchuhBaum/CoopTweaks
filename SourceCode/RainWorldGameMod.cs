@@ -10,34 +10,16 @@ namespace CoopTweaks;
 public static class RainWorldGameMod
 {
     //
-    // variables
+    // main
     //
 
-    private static bool isEnabled = false;
-
-    //
-    //
-    //
-
-    internal static void OnEnable()
+    internal static void On_Config_Changed()
     {
-        On.RainWorldGame.ctor += RainWorldGame_ctor;
-        On.RainWorldGame.ShutDownProcess += RainWorldGame_ShutDownProcess;
-    }
+        IL.RainWorldGame.RawUpdate -= IL_RainWorldGame_RawUpdate;
 
-    internal static void OnToggle()
-    {
-        isEnabled = !isEnabled;
         if (Option_SlowMotion)
         {
-            if (isEnabled)
-            {
-                IL.RainWorldGame.RawUpdate += IL_RainWorldGame_RawUpdate;
-            }
-            else
-            {
-                IL.RainWorldGame.RawUpdate -= IL_RainWorldGame_RawUpdate;
-            }
+            IL.RainWorldGame.RawUpdate += IL_RainWorldGame_RawUpdate;
         }
     }
 
@@ -45,16 +27,17 @@ public static class RainWorldGameMod
     // public
     //
 
-    public static void SetMaxUpdateShortcut(int framesPerSecond)
+    public static void Set_Number_Of_Frames_Per_Shortcut_Update(int frames_per_second)
     {
-        SBCameraScroll.RoomCameraMod.maxUpdateShortcut = framesPerSecond > 33 ? 3f : 2f; // framesPerSecond: 40f/1.21f ~ 33 & updateShortCut: 3f/1.21f < 2.5f rounded to 2
+        // framesPerSecond: 40f/1.21f ~ 33 & updateShortCut: 3f/1.21f < 2.5f rounded to 2;
+        SBCameraScroll.RoomCameraMod.number_of_frames_per_shortcut_udpate = frames_per_second > 33 ? 3f : 2f;
     }
 
     //
     // private
     //
 
-    private static void IL_RainWorldGame_RawUpdate(ILContext context) // Option_ModEnabled
+    private static void IL_RainWorldGame_RawUpdate(ILContext context) // Option_SlowMotion
     {
         // LogAllInstructions(context);
 
@@ -68,7 +51,10 @@ public static class RainWorldGameMod
         ILCursor cursor = new(context);
         if (cursor.TryGotoNext(instruction => instruction.MatchCall<MainLoopProcess>("RawUpdate")))
         {
-            Debug.Log("CoopTweaks: IL_RainWorldGame_RawUpdate: Index " + cursor.Index); // 583
+            if (can_log_il_hooks)
+            {
+                Debug.Log("CoopTweaks: IL_RainWorldGame_RawUpdate: Index " + cursor.Index); // 583
+            }
 
             // only go one back such that the labels are preserved;
             // emit Ldarg_0 after the function call;
@@ -94,50 +80,21 @@ public static class RainWorldGameMod
                     }
                 }
 
-                if (isSBCameraScrollEnabled)
+                if (is_sb_camera_scroll_enabled)
                 {
-                    SetMaxUpdateShortcut(game.framesPerSecond);
+                    Set_Number_Of_Frames_Per_Shortcut_Update(game.framesPerSecond);
                 }
             });
             cursor.Emit(OpCodes.Ldarg_0);
         }
         else
         {
-            Debug.LogException(new Exception("CoopTweaks: IL_RainWorldGame_RawUpdate failed."));
+            if (can_log_il_hooks)
+            {
+                Debug.Log("CoopTweaks: IL_RainWorldGame_RawUpdate failed.");
+            }
+            return;
         }
         // LogAllInstructions(context);
-    }
-
-    //
-    //
-    //
-
-    private static void RainWorldGame_ctor(On.RainWorldGame.orig_ctor orig, RainWorldGame game, ProcessManager manager)
-    {
-        Debug.Log("CoopTweaks: Add option specific hooks.");
-
-        MushroomMod.OnToggle();
-        PlayerMod.OnToggle();
-        RegionGateMod.OnToggle();
-
-        RainWorldGameMod.OnToggle();
-        RoomMod.OnToggle();
-        SpearMod.OnToggle();
-
-        orig(game, manager);
-    }
-
-    private static void RainWorldGame_ShutDownProcess(On.RainWorldGame.orig_ShutDownProcess orig, RainWorldGame game)
-    {
-        Debug.Log("CoopTweaks: Remove option specific hooks.");
-        orig(game);
-
-        MushroomMod.OnToggle();
-        PlayerMod.OnToggle();
-        RegionGateMod.OnToggle();
-
-        RainWorldGameMod.OnToggle();
-        RoomMod.OnToggle();
-        SpearMod.OnToggle();
     }
 }

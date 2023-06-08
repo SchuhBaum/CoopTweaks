@@ -5,28 +5,17 @@ namespace CoopTweaks;
 internal static class MushroomMod
 {
     //
-    // variables
+    // main
     //
 
-    private static bool isEnabled = false;
-
-    //
-    //
-    //
-
-    internal static void OnToggle()
+    internal static void On_Config_Changed()
     {
-        isEnabled = !isEnabled;
+        On.Mushroom.BitByPlayer -= Mushroom_BitByPlayer;
+
         if (Option_SlowMotion)
         {
-            if (isEnabled)
-            {
-                On.Mushroom.BitByPlayer += Mushroom_BitByPlayer; // share mushroom effect;
-            }
-            else
-            {
-                On.Mushroom.BitByPlayer -= Mushroom_BitByPlayer;
-            }
+            // share mushroom effect;
+            On.Mushroom.BitByPlayer += Mushroom_BitByPlayer;
         }
     }
 

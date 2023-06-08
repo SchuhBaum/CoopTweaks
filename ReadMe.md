@@ -1,5 +1,5 @@
 ## CoopTweaks
-###### Version: 0.1.1
+###### Version: 0.1.2
 
 This is a mod for Rain World v1.9.
 
@@ -18,13 +18,12 @@ This mod is a port of the tweaks from the mod JollyCoopFixesAndStuff for Rain Wo
 
 ### Installation
 0. Update Rain World to version 1.9 if needed.
-1. Download the file  `CoopTweaks.zip` from [Releases](https://github.com/SchuhBaum/CoopTweaks/releases/tag/v0.1.1).
+1. Download the file  `CoopTweaks.zip` from [Releases](https://github.com/SchuhBaum/CoopTweaks/releases/tag/v0.1.2).
 2. Extract its content in the folder `[Steam]\SteamApps\common\Rain World\RainWorld_Data\StreamingAssets\mods`.
 3. Start the game as normal. In the main menu select `Remix` and enable the mod. 
 
-### Bug reports
-Please post bugs on the Rain World Discord server in the channel #modding-support:  
-https://discord.gg/rainworld
+### Bug reports & FAQ
+See the corresponding sections on the [Steam Workshop page](https://steamcommunity.com/sharedfiles/filedetails/?id=2928752589) for the mod `SBCameraScroll`.
 
 ### Contact
 If you have feedback, you can message me on Discord `@SchuhBaum#7246` or write an email to SchuhBaum71@gmail.com.
@@ -33,6 +32,12 @@ If you have feedback, you can message me on Discord `@SchuhBaum#7246` or write a
 There are two licenses available - MIT and Unlicense. You can choose which one you want to use. 
 
 ### Changelog
+v0.1.2:
+- (Item Blinking) Fixed a bug where spearmaster could not put spears directly to its back.
+- Restored compatibility with SBCameraScroll.
+- IL hooks should no longer be logged multiple times when other mods add these IL hooks as well.
+- Option specific hooks are no longer initialized every cycle. Instead they are initialized when starting the game or changing the options.
+
 v0.1.0:
 - Initial release.
 - (SlugOnBack) Removed the ability to directly throw slugcats from back.
@@ -44,6 +49,3 @@ v0.1.0:
 - (Slugcat Collision) Fixed a bug when one of the slugcats would be removed from the room before the collision checks were done.
 - (Slow Motion) Fixed a bug where the mushroom counter was not shared when using spearmaster.
 - (Artificer Stun) When enabled, ignores JollyCoop's friendly fire setting. Otherwise the knock-back might be ignored as well.
-
-v0.1.1:
-- (Item Blinking) Fixed a bug where spearmaster could not put spears directly to its back.

@@ -12,38 +12,26 @@ public static class RoomMod
     // variables
     //
 
-    private static bool isEnabled = false;
-    private static readonly List<Creature> creaturesInRoomList = new();
+    private static readonly List<Creature> creatures_in_room_list = new();
 
     //
-    //
+    // main
     //
 
-    internal static void OnToggle()
+    internal static void On_Config_Changed()
     {
-        isEnabled = !isEnabled;
+        On.Room.PlaySound_SoundID_BodyChunk_bool_float_float -= Room_PlaySound;
+        On.Room.Update -= Room_Update;
+
         if (Option_SlowMotion)
         {
-            if (isEnabled)
-            {
-                On.Room.PlaySound_SoundID_BodyChunk_bool_float_float += Room_PlaySound; // skip mushroom sound loop;
-            }
-            else
-            {
-                On.Room.PlaySound_SoundID_BodyChunk_bool_float_float -= Room_PlaySound;
-            }
+            // skip mushroom sound loop;
+            On.Room.PlaySound_SoundID_BodyChunk_bool_float_float += Room_PlaySound;
         }
 
         if (Option_SlugcatCollision)
         {
-            if (isEnabled)
-            {
-                On.Room.Update += Room_Update;
-            }
-            else
-            {
-                On.Room.Update -= Room_Update;
-            }
+            On.Room.Update += Room_Update;
         }
     }
 
@@ -66,14 +54,14 @@ public static class RoomMod
             return;
         }
 
-        if (creaturesInRoomList.Count > 0) // had a problem with DeerFix when throwing puff balls // orig(room) never returned
+        if (creatures_in_room_list.Count > 0) // had a problem with DeerFix when throwing puff balls // orig(room) never returned
         {
             Debug.Log("CoopTweaks: Slugcat collisions could not be reset normally. Reset now.");
-            foreach (Creature creature in creaturesInRoomList)
+            foreach (Creature creature in creatures_in_room_list)
             {
                 creature.CollideWithObjects = true;
             }
-            creaturesInRoomList.Clear();
+            creatures_in_room_list.Clear();
         }
 
         // disable collision for now and handle collision manually after calling orig();
@@ -85,7 +73,7 @@ public static class RoomMod
                 {
                     if (grasp?.grabbed is Creature creature && player.Grabability(creature) != Player.ObjectGrabability.Drag)
                     {
-                        creaturesInRoomList.Add(creature);
+                        creatures_in_room_list.Add(creature);
                         creature.CollideWithObjects = false;
                     }
                 }
@@ -97,14 +85,14 @@ public static class RoomMod
                 // onBack is the player that carries you;
                 if (player.CollideWithObjects && player.onBack == null)
                 {
-                    creaturesInRoomList.Add(player);
+                    creatures_in_room_list.Add(player);
                     player.CollideWithObjects = false;
                 }
             }
         }
         orig(room);
 
-        foreach (Creature creatureA in creaturesInRoomList)
+        foreach (Creature creatureA in creatures_in_room_list)
         {
             creatureA.CollideWithObjects = true;
 
@@ -116,7 +104,7 @@ public static class RoomMod
                 // disable collision of players and creatures that they are carrying;
                 // including creatures that backPlayers are carrying;
                 {
-                    if ((physicalObjectB is Creature creatureB && creaturesInRoomList.Contains(creatureB)) || Mathf.Abs(creatureA.bodyChunks[0].pos.x - physicalObjectB.bodyChunks[0].pos.x) >= creatureA.collisionRange + physicalObjectB.collisionRange || Mathf.Abs(creatureA.bodyChunks[0].pos.y - physicalObjectB.bodyChunks[0].pos.y) >= creatureA.collisionRange + physicalObjectB.collisionRange) continue;
+                    if ((physicalObjectB is Creature creatureB && creatures_in_room_list.Contains(creatureB)) || Mathf.Abs(creatureA.bodyChunks[0].pos.x - physicalObjectB.bodyChunks[0].pos.x) >= creatureA.collisionRange + physicalObjectB.collisionRange || Mathf.Abs(creatureA.bodyChunks[0].pos.y - physicalObjectB.bodyChunks[0].pos.y) >= creatureA.collisionRange + physicalObjectB.collisionRange) continue;
                 }
 
                 bool hasCollided = false;
@@ -187,6 +175,6 @@ public static class RoomMod
                 }
             }
         }
-        creaturesInRoomList.Clear();
+        creatures_in_room_list.Clear();
     }
 }

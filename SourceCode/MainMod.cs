@@ -3,12 +3,14 @@ using BepInEx;
 using MonoMod.Cil;
 using UnityEngine;
 
-// temporary fix // should be added automatically //TODO
+// allows access to private members;
 #pragma warning disable CS0618
 [assembly: SecurityPermission(SecurityAction.RequestMinimum, SkipVerification = true)]
+#pragma warning restore CS0618
+
 namespace CoopTweaks;
 
-[BepInPlugin("SchuhBaum.CoopTweaks", "CoopTweaks", "0.1.1")]
+[BepInPlugin("SchuhBaum.CoopTweaks", "CoopTweaks", "0.1.2")]
 public class MainMod : BaseUnityPlugin
 {
     //
@@ -17,7 +19,7 @@ public class MainMod : BaseUnityPlugin
 
     public static readonly string MOD_ID = "CoopTweaks";
     public static readonly string author = "SchuhBaum";
-    public static readonly string version = "0.1.1";
+    public static readonly string version = "0.1.2";
 
     //
     // options
@@ -37,13 +39,14 @@ public class MainMod : BaseUnityPlugin
     // other mods
     //
 
-    public static bool isSBCameraScrollEnabled = false;
+    public static bool is_sb_camera_scroll_enabled = false;
 
     //
     // variables
     //
 
-    public static bool isInitialized = false;
+    public static bool is_initialized = false;
+    public static bool can_log_il_hooks = false;
 
     //
     // main
@@ -127,24 +130,22 @@ public class MainMod : BaseUnityPlugin
     private void RainWorld_OnModsInit(On.RainWorld.orig_OnModsInit orig, RainWorld rainWorld)
     {
         orig(rainWorld);
+        MachineConnector.SetRegisteredOI(MOD_ID, MainModOptions.main_mod_options);
 
-        MachineConnector.SetRegisteredOI(MOD_ID, MainModOptions.instance);
-
-        if (isInitialized) return;
-        isInitialized = true;
-
+        if (is_initialized) return;
+        is_initialized = true;
         Debug.Log("CoopTweaks: version " + version);
 
         foreach (ModManager.Mod mod in ModManager.ActiveMods)
         {
-            if (mod.id == "SchuhBaum.SBCameraScroll")
+            if (mod.id == "SBCameraScroll")
             {
-                isSBCameraScrollEnabled = true;
+                is_sb_camera_scroll_enabled = true;
                 break;
             }
         }
 
-        if (!isSBCameraScrollEnabled)
+        if (!is_sb_camera_scroll_enabled)
         {
             Debug.Log("CoopTweaks: SBCameraScroll not found.");
         }
@@ -154,6 +155,6 @@ public class MainMod : BaseUnityPlugin
         }
 
         ArtificialIntelligenceMod.OnEnable();
-        RainWorldGameMod.OnEnable();
+        ProcessManagerMod.OnEnable();
     }
 }

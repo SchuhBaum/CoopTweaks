@@ -5,29 +5,17 @@ namespace CoopTweaks;
 internal static class SpearMod
 {
     //
-    // variables
+    // main
     //
 
-    private static bool isEnabled = false;
-
-    //
-    //
-    //
-
-    internal static void OnToggle()
+    internal static void On_Config_Changed()
     {
-        isEnabled = !isEnabled;
+        On.Spear.HitSomethingWithoutStopping -= Spear_HitSomethingWithoutStopping;
+
         if (Option_SlowMotion)
         {
-            if (isEnabled)
-            {
-                // share mushroom effect with other players;
-                On.Spear.HitSomethingWithoutStopping += Spear_HitSomethingWithoutStopping;
-            }
-            else
-            {
-                On.Spear.HitSomethingWithoutStopping -= Spear_HitSomethingWithoutStopping;
-            }
+            // share mushroom effect with other players;
+            On.Spear.HitSomethingWithoutStopping += Spear_HitSomethingWithoutStopping;
         }
     }
 
