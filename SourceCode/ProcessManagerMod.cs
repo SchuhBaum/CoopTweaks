@@ -6,7 +6,7 @@ using static ProcessManager;
 
 namespace CoopTweaks;
 
-internal static class ProcessManagerMod
+public static class ProcessManagerMod
 {
     //
     // main

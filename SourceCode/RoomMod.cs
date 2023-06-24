@@ -6,7 +6,7 @@ using static CoopTweaks.MainMod;
 
 namespace CoopTweaks;
 
-public static class RoomMod
+internal static class RoomMod
 {
     //
     // variables
@@ -99,8 +99,15 @@ public static class RoomMod
             // they might get removed during orig();
             if (creatureA.room != room) continue;
 
-            foreach (PhysicalObject physicalObjectB in room.physicalObjects[creatureA.collisionLayer])
+            List<PhysicalObject> physical_objects = room.physicalObjects[creatureA.collisionLayer];
+            for (int physical_object_index = physical_objects.Count - 1; physical_object_index >= 0; --physical_object_index)
             {
+                // this seems to be more robust; I had an issue when dropping spears and singularity bombs in 
+                // a not-used pipe exit; the exit would push them out again triggering collisions; somehow
+                // this modified the list and I get an error; my guess is that the collisionLayer was changed
+                // by the collision, which modified the list;
+                PhysicalObject physicalObjectB = physical_objects[physical_object_index];
+
                 // disable collision of players and creatures that they are carrying;
                 // including creatures that backPlayers are carrying;
                 {

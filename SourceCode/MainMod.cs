@@ -10,7 +10,7 @@ using UnityEngine;
 
 namespace CoopTweaks;
 
-[BepInPlugin("SchuhBaum.CoopTweaks", "CoopTweaks", "0.1.2")]
+[BepInPlugin("SchuhBaum.CoopTweaks", "CoopTweaks", "0.1.3")]
 public class MainMod : BaseUnityPlugin
 {
     //
@@ -19,7 +19,7 @@ public class MainMod : BaseUnityPlugin
 
     public static readonly string MOD_ID = "CoopTweaks";
     public static readonly string author = "SchuhBaum";
-    public static readonly string version = "0.1.2";
+    public static readonly string version = "0.1.3";
 
     //
     // options

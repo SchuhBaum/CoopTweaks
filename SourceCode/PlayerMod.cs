@@ -6,7 +6,7 @@ using static CoopTweaks.MainMod;
 
 namespace CoopTweaks;
 
-internal static class PlayerMod
+public static class PlayerMod
 {
     //
     // main
