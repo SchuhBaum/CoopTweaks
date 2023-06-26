@@ -9,6 +9,12 @@ namespace CoopTweaks;
 public static class PlayerMod
 {
     //
+    // variables
+    //
+
+    public static bool has_encountered_NaN_bug = false;
+
+    //
     // main
     //
 
@@ -21,6 +27,14 @@ public static class PlayerMod
         On.Player.CanIPickThisUp -= Player_CanIPickThisUp;
         On.Player.Update -= Player_Update;
 
+        // add bugfix for missing body parts;
+        // 
+        // skip deaf beep;
+        // release grasp when pressing jump;
+        // sync mushroom counter between player;
+        // only drop player when holding down + grab;
+        On.Player.Update += Player_Update;
+
         if (Option_ArtificerStun)
         {
             // remove friendly fire stuns;
@@ -29,15 +43,6 @@ public static class PlayerMod
             // and you can have spear friendly fire enabled;
             // also I don't remove the knock-back;
             IL.Player.ClassMechanicsArtificer += IL_Player_ClassMechanicsArtificer;
-        }
-
-        if (Option_DeafBeep || Option_ReleaseGrasp || Option_SlowMotion || Option_SlugOnBack)
-        {
-            // skip deaf beep;
-            // release grasp when pressing jump;
-            // sync mushroom counter between player;
-            // only drop player when holding down + grab;
-            On.Player.Update += Player_Update;
         }
 
         if (Option_ItemBlinking)
@@ -200,6 +205,19 @@ public static class PlayerMod
 
     private static void Player_Update(On.Player.orig_Update orig, Player player, bool eu) // Option_DeafBeep // Option_ReleaseGrasp // Option_SlowMotion // Option_SlugOnBack
     {
+        // bug is reported // temporary
+        if (Mathf.Max(1f - player.airInLungs, player.aerobicLevel - (player.slugcatStats.malnourished ? 1.2f : 1f) / (((player.input[0].x == 0 && player.input[0].y == 0) ? 400f : 1100f) * (1f + 3f * Mathf.InverseLerp(0.9f, 1f, player.aerobicLevel)))) is float.NaN && !has_encountered_NaN_bug)
+        {
+            Debug.Log("CoopTweaks: The variable aerobicLevel might be NaN. Some body parts might be missing. Let's hope for the best. This message will only be logged once.");
+            has_encountered_NaN_bug = true;
+        }
+
+        if (!Option_DeafBeep && !Option_ReleaseGrasp && !Option_SlowMotion && !Option_SlugOnBack)
+        {
+            orig(player, eu);
+            return;
+        }
+
         if (player.isNPC)
         {
             orig(player, eu);
