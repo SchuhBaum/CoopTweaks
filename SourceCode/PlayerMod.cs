@@ -1,3 +1,4 @@
+using System;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using UnityEngine;
@@ -47,17 +48,21 @@ public static class PlayerMod
 
         if (Option_ItemBlinking)
         {
-            On.Player.CanIPickThisUp += Player_CanIPickThisUp; // remove blinking when you cannot pickup items;
+            // remove blinking when you cannot pickup items;
+            On.Player.CanIPickThisUp += Player_CanIPickThisUp;
+        }
+
+        if (Option_ItemBlinking || Option_SlugOnBack)
+        {
+            // prevent items from blinking if you are on the back of another player;
+            // remove the ability to throw slugcats from back;
+            IL.Player.GrabUpdate += IL_Player_GrabUpdate;
         }
 
         if (Option_SlowMotion)
         {
-            On.Player.BiteEdibleObject += Player_BiteEdibleObject; // adds eat sound to mushrooms;
-        }
-
-        if (Option_SlugOnBack)
-        {
-            IL.Player.GrabUpdate += IL_Player_GrabUpdate; // remove ability to throw slugcats from back;
+            // adds eat sound to mushrooms;
+            On.Player.BiteEdibleObject += Player_BiteEdibleObject;
         }
     }
 
@@ -85,7 +90,7 @@ public static class PlayerMod
     // private
     //
 
-    private static void IL_Player_ClassMechanicsArtificer(ILContext context)
+    private static void IL_Player_ClassMechanicsArtificer(ILContext context) // Option_ArtificerStun
     {
         // LogAllInstructions(context);
         ILCursor cursor = new(context);
@@ -143,20 +148,56 @@ public static class PlayerMod
         // LogAllInstructions(context);
     }
 
-    private static void IL_Player_GrabUpdate(ILContext context)
+    private static void IL_Player_GrabUpdate(ILContext context) // Option_ItemBlinking // Option_SlugOnBack
     {
         // LogAllInstructions(context);
         ILCursor cursor = new(context);
 
-        if (cursor.TryGotoNext(instruction => instruction.MatchCallvirt<Player.SlugOnBack>("SlugToHand")))
+        if (cursor.TryGotoNext(
+            instruction => instruction.MatchBrfalse(out _),
+            instruction => instruction.MatchLdloc(out _),
+            instruction => instruction.MatchIsinst<PlayerCarryableItem>(),
+            instruction => instruction.MatchCallvirt<PlayerCarryableItem>("Blink")
+        ))
+        {
+            if (Option_ItemBlinking)
+            {
+                if (can_log_il_hooks)
+                {
+                    Debug.Log("CoopTweaks: IL_Player_GrabUpdate: Index " + cursor.Index); // 2340
+                }
+
+                // I am not sure why I can't get the label from the MatchBrFalse(out ILLabel label);
+                // maybe it is because I am using lambda expressions;
+                ILLabel label = (ILLabel)cursor.Next.Operand;
+                cursor.Goto(cursor.Index + 1);
+
+                cursor.Emit(OpCodes.Ldarg_0); // player
+                cursor.EmitDelegate<Func<Player, bool>>(player => player.onBack != null);
+                cursor.Emit(OpCodes.Brtrue, label);
+            }
+        }
+        else
         {
             if (can_log_il_hooks)
             {
-                Debug.Log("CoopTweaks: IL_Player_GrabUpdate: Index " + cursor.Index); // 2497
+                Debug.Log("CoopTweaks: IL_Player_GrabUpdate failed.");
             }
+            return;
+        }
 
-            cursor.Goto(cursor.Index - 14); // 2483
-            cursor.Emit(OpCodes.Br, cursor.Prev.Operand); // skip whole if statement;
+        if (cursor.TryGotoNext(instruction => instruction.MatchCallvirt<Player.SlugOnBack>("SlugToHand")))
+        {
+            if (Option_SlugOnBack)
+            {
+                if (can_log_il_hooks)
+                {
+                    Debug.Log("CoopTweaks: IL_Player_GrabUpdate: Index " + cursor.Index); // 2497
+                }
+
+                cursor.Goto(cursor.Index - 14); // 2483
+                cursor.Emit(OpCodes.Br, cursor.Prev.Operand); // skip whole if statement;
+            }
         }
         else
         {
@@ -186,7 +227,7 @@ public static class PlayerMod
         orig(player, eu);
     }
 
-    private static bool Player_CanIPickThisUp(On.Player.orig_CanIPickThisUp orig, Player player, PhysicalObject physical_object)
+    private static bool Player_CanIPickThisUp(On.Player.orig_CanIPickThisUp orig, Player player, PhysicalObject physical_object) // Option_ItemBlinking
     {
         Player.ObjectGrabability object_grabability = player.Grabability(physical_object);
         bool both_hands_are_full = player.grasps[0] != null && player.grasps[1] != null;

@@ -1,5 +1,5 @@
 ## CoopTweaks
-###### Version: 0.1.5
+###### Version: 0.1.6
 
 This is a mod for Rain World v1.9.
 
@@ -18,7 +18,7 @@ This mod is a port of the tweaks from the mod JollyCoopFixesAndStuff for Rain Wo
 
 ### Installation
 0. Update Rain World to version 1.9 if needed.
-1. Download the file  `CoopTweaks.zip` from [Releases](https://github.com/SchuhBaum/CoopTweaks/releases/tag/v0.1.5).
+1. Download the file  `CoopTweaks.zip` from [Releases](https://github.com/SchuhBaum/CoopTweaks/releases/tag/v0.1.6).
 2. Extract its content in the folder `[Steam]\SteamApps\common\Rain World\RainWorld_Data\StreamingAssets\mods`.
 3. Start the game as normal. In the main menu select `Remix` and enable the mod. 
 
@@ -32,7 +32,7 @@ If you have feedback, you can message me on Discord `@schuhbaum` or write an ema
 There are two licenses available - MIT and Unlicense. You can choose which one you want to use. 
 
 ### Changelog
-v0.1.5:
+v0.1.6:
 - (Item Blinking) Fixed a bug where spearmaster could not put spears directly to its back.
 - Restored compatibility with SBCameraScroll.
 - IL hooks should no longer be logged multiple times when other mods add these IL hooks as well.
@@ -40,6 +40,7 @@ v0.1.5:
 - (Slugcat Collision) Potentially fixed a bug when objects would change collision layers.
 - Added a pdb file for debugging.
 - Added a potential workaround for the bug in coop where you would be missing body parts.
+- (Item Blinking) Prevent items from blinking if the slugcat is carried on the back.
 
 v0.1.0:
 - Initial release.
