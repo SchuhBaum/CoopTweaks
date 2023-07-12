@@ -1,14 +1,12 @@
-using System;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
+using System;
 using UnityEngine;
-
 using static CoopTweaks.MainMod;
 
 namespace CoopTweaks;
 
-public static class PlayerMod
-{
+public static class PlayerMod {
     //
     // variables
     //
@@ -19,8 +17,7 @@ public static class PlayerMod
     // main
     //
 
-    internal static void On_Config_Changed()
-    {
+    internal static void On_Config_Changed() {
         IL.Player.ClassMechanicsArtificer -= IL_Player_ClassMechanicsArtificer;
         IL.Player.GrabUpdate -= IL_Player_GrabUpdate;
 
@@ -36,8 +33,7 @@ public static class PlayerMod
         // only drop player when holding down + grab;
         On.Player.Update += Player_Update;
 
-        if (Option_ArtificerStun)
-        {
+        if (Option_ArtificerStun) {
             // remove friendly fire stuns;
             // they added this in v1.9.06;
             // the only real difference is that this works in Arena as well;
@@ -46,21 +42,18 @@ public static class PlayerMod
             IL.Player.ClassMechanicsArtificer += IL_Player_ClassMechanicsArtificer;
         }
 
-        if (Option_ItemBlinking)
-        {
+        if (Option_ItemBlinking) {
             // remove blinking when you cannot pickup items;
             On.Player.CanIPickThisUp += Player_CanIPickThisUp;
         }
 
-        if (Option_ItemBlinking || Option_SlugOnBack)
-        {
+        if (Option_ItemBlinking || Option_SlugOnBack) {
             // prevent items from blinking if you are on the back of another player;
             // remove the ability to throw slugcats from back;
             IL.Player.GrabUpdate += IL_Player_GrabUpdate;
         }
 
-        if (Option_SlowMotion)
-        {
+        if (Option_SlowMotion) {
             // adds eat sound to mushrooms;
             On.Player.BiteEdibleObject += Player_BiteEdibleObject;
         }
@@ -70,17 +63,14 @@ public static class PlayerMod
     // public
     //
 
-    public static void SynchronizeMushroomCounter(Player player)
-    {
+    public static void SynchronizeMushroomCounter(Player player) {
         if (player.inShortcut) return;
 
         // synchronize with other player;
         // player in shortcuts don't update the mushroom counter on their own,
         // i.e. the update function is not called;
-        foreach (AbstractCreature abstractPlayer in player.abstractCreature.world.game.Players)
-        {
-            if (abstractPlayer.realizedCreature is Player player_ && player_.inShortcut)
-            {
+        foreach (AbstractCreature abstractPlayer in player.abstractCreature.world.game.Players) {
+            if (abstractPlayer.realizedCreature is Player player_ && player_.inShortcut) {
                 player_.mushroomCounter = player.mushroomCounter;
             }
         }
@@ -97,10 +87,8 @@ public static class PlayerMod
 
         // ignore the coop friendly fire setting;
         // otherwise the knock back might be skipped as well;
-        if (cursor.TryGotoNext(instruction => instruction.MatchLdsfld<ModManager>("CoopAvailable")))
-        {
-            if (can_log_il_hooks)
-            {
+        if (cursor.TryGotoNext(instruction => instruction.MatchLdsfld<ModManager>("CoopAvailable"))) {
+            if (can_log_il_hooks) {
                 Debug.Log("CoopTweaks: IL_Player_ClassMechanicsArtificer: Index " + cursor.Index); // 861
             }
 
@@ -108,21 +96,16 @@ public static class PlayerMod
             cursor.Prev.OpCode = OpCodes.Br;
             cursor.Prev.Operand = cursor.Next.Operand; // label
             cursor.RemoveRange(1);
-        }
-        else
-        {
-            if (can_log_il_hooks)
-            {
+        } else {
+            if (can_log_il_hooks) {
                 Debug.Log("CoopTweaks: IL_Player_ClassMechanicsArtificer failed.");
             }
             return;
         }
 
         // skip only the stun but not the knock-back;
-        if (cursor.TryGotoNext(instruction => instruction.MatchIsinst("Scavenger")))
-        {
-            if (can_log_il_hooks)
-            {
+        if (cursor.TryGotoNext(instruction => instruction.MatchIsinst("Scavenger"))) {
+            if (can_log_il_hooks) {
                 Debug.Log("CoopTweaks: IL_Player_ClassMechanicsArtificer: Index " + cursor.Index); // 922
             }
 
@@ -136,11 +119,8 @@ public static class PlayerMod
 
             // restore vanilla since this was re-used for the type check;
             cursor.Emit(OpCodes.Ldloc_S, creature);
-        }
-        else
-        {
-            if (can_log_il_hooks)
-            {
+        } else {
+            if (can_log_il_hooks) {
                 Debug.Log("CoopTweaks: IL_Player_ClassMechanicsArtificer failed.");
             }
             return;
@@ -158,12 +138,9 @@ public static class PlayerMod
             instruction => instruction.MatchLdloc(out _),
             instruction => instruction.MatchIsinst<PlayerCarryableItem>(),
             instruction => instruction.MatchCallvirt<PlayerCarryableItem>("Blink")
-        ))
-        {
-            if (Option_ItemBlinking)
-            {
-                if (can_log_il_hooks)
-                {
+        )) {
+            if (Option_ItemBlinking) {
+                if (can_log_il_hooks) {
                     Debug.Log("CoopTweaks: IL_Player_GrabUpdate: Index " + cursor.Index); // 2340
                 }
 
@@ -176,33 +153,24 @@ public static class PlayerMod
                 cursor.EmitDelegate<Func<Player, bool>>(player => player.onBack != null);
                 cursor.Emit(OpCodes.Brtrue, label);
             }
-        }
-        else
-        {
-            if (can_log_il_hooks)
-            {
+        } else {
+            if (can_log_il_hooks) {
                 Debug.Log("CoopTweaks: IL_Player_GrabUpdate failed.");
             }
             return;
         }
 
-        if (cursor.TryGotoNext(instruction => instruction.MatchCallvirt<Player.SlugOnBack>("SlugToHand")))
-        {
-            if (Option_SlugOnBack)
-            {
-                if (can_log_il_hooks)
-                {
+        if (cursor.TryGotoNext(instruction => instruction.MatchCallvirt<Player.SlugOnBack>("SlugToHand"))) {
+            if (Option_SlugOnBack) {
+                if (can_log_il_hooks) {
                     Debug.Log("CoopTweaks: IL_Player_GrabUpdate: Index " + cursor.Index); // 2497
                 }
 
                 cursor.Goto(cursor.Index - 14); // 2483
                 cursor.Emit(OpCodes.Br, cursor.Prev.Operand); // skip whole if statement;
             }
-        }
-        else
-        {
-            if (can_log_il_hooks)
-            {
+        } else {
+            if (can_log_il_hooks) {
                 Debug.Log("CoopTweaks: IL_Player_GrabUpdate failed.");
             }
             return;
@@ -216,10 +184,8 @@ public static class PlayerMod
 
     private static void Player_BiteEdibleObject(On.Player.orig_BiteEdibleObject orig, Player player, bool eu) // Option_SlowMotion
     {
-        foreach (Creature.Grasp? grasp in player.grasps)
-        {
-            if (grasp?.grabbed is Mushroom)
-            {
+        foreach (Creature.Grasp? grasp in player.grasps) {
+            if (grasp?.grabbed is Mushroom) {
                 player.room?.PlaySound(SoundID.Slugcat_Bite_Dangle_Fruit, player.mainBodyChunk);
                 break;
             }
@@ -232,8 +198,7 @@ public static class PlayerMod
         Player.ObjectGrabability object_grabability = player.Grabability(physical_object);
         bool both_hands_are_full = player.grasps[0] != null && player.grasps[1] != null;
 
-        if (object_grabability == Player.ObjectGrabability.OneHand && both_hands_are_full)
-        {
+        if (object_grabability == Player.ObjectGrabability.OneHand && both_hands_are_full) {
             // spearmaster can grab spears with one hand;
             // this is a perk in Expedition as well;
             if (physical_object is Spear && player.CanPutSpearToBack) return orig(player, physical_object);
@@ -247,48 +212,39 @@ public static class PlayerMod
     private static void Player_Update(On.Player.orig_Update orig, Player player, bool eu) // Option_DeafBeep // Option_ReleaseGrasp // Option_SlowMotion // Option_SlugOnBack
     {
         // bug is reported // temporary
-        if (Mathf.Max(1f - player.airInLungs, player.aerobicLevel - (player.slugcatStats.malnourished ? 1.2f : 1f) / (((player.input[0].x == 0 && player.input[0].y == 0) ? 400f : 1100f) * (1f + 3f * Mathf.InverseLerp(0.9f, 1f, player.aerobicLevel)))) is float.NaN && !has_encountered_NaN_bug)
-        {
+        if (Mathf.Max(1f - player.airInLungs, player.aerobicLevel - (player.slugcatStats.malnourished ? 1.2f : 1f) / (((player.input[0].x == 0 && player.input[0].y == 0) ? 400f : 1100f) * (1f + 3f * Mathf.InverseLerp(0.9f, 1f, player.aerobicLevel)))) is float.NaN && !has_encountered_NaN_bug) {
             Debug.Log("CoopTweaks: The variable aerobicLevel might be NaN. Some body parts might be missing. Let's hope for the best. This message will only be logged once.");
             has_encountered_NaN_bug = true;
         }
 
-        if (!Option_DeafBeep && !Option_ReleaseGrasp && !Option_SlowMotion && !Option_SlugOnBack)
-        {
+        if (!Option_DeafBeep && !Option_ReleaseGrasp && !Option_SlowMotion && !Option_SlugOnBack) {
             orig(player, eu);
             return;
         }
 
-        if (player.isNPC)
-        {
+        if (player.isNPC) {
             orig(player, eu);
             return;
         }
 
-        if (Option_DeafBeep)
-        {
+        if (Option_DeafBeep) {
             player.deaf = 0; // this sound loop can get stuck // disable for now
         }
         orig(player, eu);
 
-        if (player.input[0].jmp && !player.input[1].jmp && player.grabbedBy?.Count > 0 && Option_ReleaseGrasp)
-        {
-            for (int graspIndex = player.grabbedBy.Count - 1; graspIndex >= 0; graspIndex--)
-            {
-                if (player.grabbedBy[graspIndex] is Creature.Grasp grasp && grasp.grabber is Player player_)
-                {
+        if (player.input[0].jmp && !player.input[1].jmp && player.grabbedBy?.Count > 0 && Option_ReleaseGrasp) {
+            for (int graspIndex = player.grabbedBy.Count - 1; graspIndex >= 0; graspIndex--) {
+                if (player.grabbedBy[graspIndex] is Creature.Grasp grasp && grasp.grabber is Player player_) {
                     player_.ReleaseGrasp(grasp.graspUsed); // list is modified
                 }
             }
         }
 
-        if (Option_SlowMotion)
-        {
+        if (Option_SlowMotion) {
             SynchronizeMushroomCounter(player);
         }
 
-        if (player.slugOnBack.HasASlug && player.input[0].y != -1 && Option_SlugOnBack)
-        {
+        if (player.slugOnBack.HasASlug && player.input[0].y != -1 && Option_SlugOnBack) {
             player.slugOnBack.increment = false;
         }
     }

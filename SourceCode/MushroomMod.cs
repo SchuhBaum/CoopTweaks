@@ -2,18 +2,15 @@ using static CoopTweaks.MainMod;
 
 namespace CoopTweaks;
 
-internal static class MushroomMod
-{
+internal static class MushroomMod {
     //
     // main
     //
 
-    internal static void On_Config_Changed()
-    {
+    internal static void On_Config_Changed() {
         On.Mushroom.BitByPlayer -= Mushroom_BitByPlayer;
 
-        if (Option_SlowMotion)
-        {
+        if (Option_SlowMotion) {
             // share mushroom effect;
             On.Mushroom.BitByPlayer += Mushroom_BitByPlayer;
         }
@@ -28,8 +25,7 @@ internal static class MushroomMod
         orig(mushroom, grasp, eu);
         foreach (AbstractCreature abstractPlayer in mushroom.abstractPhysicalObject.world.game.Players) // mushroom.room is null when in room transition // doesn't matter in this case
         {
-            if (abstractPlayer.realizedCreature is Player player && player != grasp?.grabber)
-            {
+            if (abstractPlayer.realizedCreature is Player player && player != grasp?.grabber) {
                 player.mushroomCounter += 320;
             }
         }

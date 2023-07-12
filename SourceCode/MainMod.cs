@@ -1,6 +1,6 @@
-using System.Security.Permissions;
 using BepInEx;
 using MonoMod.Cil;
+using System.Security.Permissions;
 using UnityEngine;
 
 // allows access to private members;
@@ -11,8 +11,7 @@ using UnityEngine;
 namespace CoopTweaks;
 
 [BepInPlugin("SchuhBaum.CoopTweaks", "CoopTweaks", "0.1.6")]
-public class MainMod : BaseUnityPlugin
-{
+public class MainMod : BaseUnityPlugin {
     //
     // meta data
     //
@@ -59,8 +58,7 @@ public class MainMod : BaseUnityPlugin
     // public
     //
 
-    public static void LogAllInstructions(ILContext context, int indexStringLength = 9, int opCodeStringLength = 14)
-    {
+    public static void LogAllInstructions(ILContext context, int indexStringLength = 9, int opCodeStringLength = 14) {
         if (context == null) return;
 
         Debug.Log("-----------------------------------------------------------------");
@@ -74,49 +72,36 @@ public class MainMod : BaseUnityPlugin
         string opCodeString;
         string operandString;
 
-        while (true)
-        {
+        while (true) {
             // this might return too early;
             // if (cursor.Next.MatchRet()) break;
 
             // should always break at some point;
             // only TryGotoNext() doesn't seem to be enough;
             // it still throws an exception;
-            try
-            {
-                if (cursor.TryGotoNext(MoveType.Before))
-                {
+            try {
+                if (cursor.TryGotoNext(MoveType.Before)) {
                     cursorIndexString = cursor.Index.ToString();
                     cursorIndexString = cursorIndexString.Length < indexStringLength ? cursorIndexString + new string(' ', indexStringLength - cursorIndexString.Length) : cursorIndexString;
                     opCodeString = cursor.Next.OpCode.ToString();
 
-                    if (cursor.Next.Operand is ILLabel label)
-                    {
+                    if (cursor.Next.Operand is ILLabel label) {
                         labelCursor.GotoLabel(label);
                         operandString = "Label >>> " + labelCursor.Index;
-                    }
-                    else
-                    {
+                    } else {
                         operandString = cursor.Next.Operand?.ToString() ?? "";
                     }
 
-                    if (operandString == "")
-                    {
+                    if (operandString == "") {
                         Debug.Log(cursorIndexString + opCodeString);
-                    }
-                    else
-                    {
+                    } else {
                         opCodeString = opCodeString.Length < opCodeStringLength ? opCodeString + new string(' ', opCodeStringLength - opCodeString.Length) : opCodeString;
                         Debug.Log(cursorIndexString + opCodeString + operandString);
                     }
-                }
-                else
-                {
+                } else {
                     break;
                 }
-            }
-            catch
-            {
+            } catch {
                 break;
             }
         }
@@ -127,8 +112,7 @@ public class MainMod : BaseUnityPlugin
     // private
     //
 
-    private void RainWorld_OnModsInit(On.RainWorld.orig_OnModsInit orig, RainWorld rainWorld)
-    {
+    private void RainWorld_OnModsInit(On.RainWorld.orig_OnModsInit orig, RainWorld rainWorld) {
         orig(rainWorld);
         MachineConnector.SetRegisteredOI(MOD_ID, MainModOptions.main_mod_options);
 
@@ -136,21 +120,16 @@ public class MainMod : BaseUnityPlugin
         is_initialized = true;
         Debug.Log("CoopTweaks: version " + version);
 
-        foreach (ModManager.Mod mod in ModManager.ActiveMods)
-        {
-            if (mod.id == "SBCameraScroll")
-            {
+        foreach (ModManager.Mod mod in ModManager.ActiveMods) {
+            if (mod.id == "SBCameraScroll") {
                 is_sb_camera_scroll_enabled = true;
                 break;
             }
         }
 
-        if (!is_sb_camera_scroll_enabled)
-        {
+        if (!is_sb_camera_scroll_enabled) {
             Debug.Log("CoopTweaks: SBCameraScroll not found.");
-        }
-        else
-        {
+        } else {
             Debug.Log("CoopTweaks: SBCameraScroll found. Synchronize shortcut position updates when mushroom effect is active.");
         }
 

@@ -1,13 +1,11 @@
-using System.Collections.Generic;
 using RWCustom;
+using System.Collections.Generic;
 using UnityEngine;
-
 using static CoopTweaks.MainMod;
 
 namespace CoopTweaks;
 
-internal static class RoomMod
-{
+internal static class RoomMod {
     //
     // variables
     //
@@ -18,19 +16,16 @@ internal static class RoomMod
     // main
     //
 
-    internal static void On_Config_Changed()
-    {
+    internal static void On_Config_Changed() {
         On.Room.PlaySound_SoundID_BodyChunk_bool_float_float -= Room_PlaySound;
         On.Room.Update -= Room_Update;
 
-        if (Option_SlowMotion)
-        {
+        if (Option_SlowMotion) {
             // skip mushroom sound loop;
             On.Room.PlaySound_SoundID_BodyChunk_bool_float_float += Room_PlaySound;
         }
 
-        if (Option_SlugcatCollision)
-        {
+        if (Option_SlugcatCollision) {
             On.Room.Update += Room_Update;
         }
     }
@@ -48,8 +43,7 @@ internal static class RoomMod
     private static void Room_Update(On.Room.orig_Update orig, Room room) // Option_SlugcatCollision
     {
         // collision between slugcats (and creatures that are being carried by slugcats)
-        if (room.game == null)
-        {
+        if (room.game == null) {
             orig(room);
             return;
         }
@@ -57,22 +51,17 @@ internal static class RoomMod
         if (creatures_in_room_list.Count > 0) // had a problem with DeerFix when throwing puff balls // orig(room) never returned
         {
             Debug.Log("CoopTweaks: Slugcat collisions could not be reset normally. Reset now.");
-            foreach (Creature creature in creatures_in_room_list)
-            {
+            foreach (Creature creature in creatures_in_room_list) {
                 creature.CollideWithObjects = true;
             }
             creatures_in_room_list.Clear();
         }
 
         // disable collision for now and handle collision manually after calling orig();
-        foreach (AbstractCreature abstractPlayer in room.game.Players)
-        {
-            if (abstractPlayer.Room == room.abstractRoom && abstractPlayer.realizedCreature is Player player)
-            {
-                foreach (Creature.Grasp? grasp in player.grasps)
-                {
-                    if (grasp?.grabbed is Creature creature && player.Grabability(creature) != Player.ObjectGrabability.Drag)
-                    {
+        foreach (AbstractCreature abstractPlayer in room.game.Players) {
+            if (abstractPlayer.Room == room.abstractRoom && abstractPlayer.realizedCreature is Player player) {
+                foreach (Creature.Grasp? grasp in player.grasps) {
+                    if (grasp?.grabbed is Creature creature && player.Grabability(creature) != Player.ObjectGrabability.Drag) {
                         creatures_in_room_list.Add(creature);
                         creature.CollideWithObjects = false;
                     }
@@ -83,8 +72,7 @@ internal static class RoomMod
                 // otherwise backPlayers can collide with creatures that are being eating;
                 // not sure if this is still a thing but doesn't hurt;
                 // onBack is the player that carries you;
-                if (player.CollideWithObjects && player.onBack == null)
-                {
+                if (player.CollideWithObjects && player.onBack == null) {
                     creatures_in_room_list.Add(player);
                     player.CollideWithObjects = false;
                 }
@@ -92,16 +80,14 @@ internal static class RoomMod
         }
         orig(room);
 
-        foreach (Creature creatureA in creatures_in_room_list)
-        {
+        foreach (Creature creatureA in creatures_in_room_list) {
             creatureA.CollideWithObjects = true;
 
             // they might get removed during orig();
             if (creatureA.room != room) continue;
 
             List<PhysicalObject> physical_objects = room.physicalObjects[creatureA.collisionLayer];
-            for (int physical_object_index = physical_objects.Count - 1; physical_object_index >= 0; --physical_object_index)
-            {
+            for (int physical_object_index = physical_objects.Count - 1; physical_object_index >= 0; --physical_object_index) {
                 // this seems to be more robust; I had an issue when dropping spears and singularity bombs in 
                 // a not-used pipe exit; the exit would push them out again triggering collisions; somehow
                 // this modified the list and I get an error; my guess is that the collisionLayer was changed
@@ -120,12 +106,9 @@ internal static class RoomMod
                 // is grabbing;
                 // only remaining case where this is needed is when
                 // the player drags a creature;
-                if (creatureA.Template.grasps > 0)
-                {
-                    foreach (Creature.Grasp? grasp in creatureA.grasps)
-                    {
-                        if (grasp != null && grasp.grabbed == physicalObjectB)
-                        {
+                if (creatureA.Template.grasps > 0) {
+                    foreach (Creature.Grasp? grasp in creatureA.grasps) {
+                        if (grasp != null && grasp.grabbed == physicalObjectB) {
                             isGrabbed = true;
                             break;
                         }
@@ -135,12 +118,9 @@ internal static class RoomMod
                 {
                     // is being grabbed;
                     // creatureB_.Template.grasps > 0 takes also care of creatureB_.grasps != null;
-                    if (!isGrabbed && physicalObjectB is Creature creatureB && creatureB.Template.grasps > 0)
-                    {
-                        foreach (Creature.Grasp? grasp in creatureB.grasps)
-                        {
-                            if (grasp != null && grasp.grabbed == creatureA)
-                            {
+                    if (!isGrabbed && physicalObjectB is Creature creatureB && creatureB.Template.grasps > 0) {
+                        foreach (Creature.Grasp? grasp in creatureB.grasps) {
+                            if (grasp != null && grasp.grabbed == creatureA) {
                                 isGrabbed = true;
                                 break;
                             }
@@ -149,12 +129,9 @@ internal static class RoomMod
                 }
 
                 if (isGrabbed) continue;
-                foreach (BodyChunk playerBodyChunk in creatureA.bodyChunks)
-                {
-                    foreach (BodyChunk pOBodyChunk in physicalObjectB.bodyChunks)
-                    {
-                        if (playerBodyChunk.collideWithObjects && pOBodyChunk.collideWithObjects && Custom.DistLess(playerBodyChunk.pos, pOBodyChunk.pos, playerBodyChunk.rad + pOBodyChunk.rad))
-                        {
+                foreach (BodyChunk playerBodyChunk in creatureA.bodyChunks) {
+                    foreach (BodyChunk pOBodyChunk in physicalObjectB.bodyChunks) {
+                        if (playerBodyChunk.collideWithObjects && pOBodyChunk.collideWithObjects && Custom.DistLess(playerBodyChunk.pos, pOBodyChunk.pos, playerBodyChunk.rad + pOBodyChunk.rad)) {
                             float radiusCombined = playerBodyChunk.rad + pOBodyChunk.rad;
                             float distance = Vector2.Distance(playerBodyChunk.pos, pOBodyChunk.pos);
                             Vector2 direction = Custom.DirVec(playerBodyChunk.pos, pOBodyChunk.pos);
@@ -165,14 +142,12 @@ internal static class RoomMod
                             pOBodyChunk.pos += (radiusCombined - distance) * direction * (1f - massProportion);
                             pOBodyChunk.vel += (radiusCombined - distance) * direction * (1f - massProportion);
 
-                            if (playerBodyChunk.pos.x == pOBodyChunk.pos.x)
-                            {
+                            if (playerBodyChunk.pos.x == pOBodyChunk.pos.x) {
                                 playerBodyChunk.vel += Custom.DegToVec(Random.value * 360f) * 0.0001f;
                                 pOBodyChunk.vel += Custom.DegToVec(Random.value * 360f) * 0.0001f;
                             }
 
-                            if (!hasCollided)
-                            {
+                            if (!hasCollided) {
                                 creatureA.Collide(physicalObjectB, playerBodyChunk.index, pOBodyChunk.index);
                                 physicalObjectB.Collide(creatureA, pOBodyChunk.index, playerBodyChunk.index);
                             }
