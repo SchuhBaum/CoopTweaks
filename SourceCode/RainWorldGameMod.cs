@@ -59,8 +59,8 @@ public static class RainWorldGameMod {
                 if (is_chat_log_active) return;
 
                 game.framesPerSecond = 40;
-                foreach (AbstractCreature abstractPlayer in game.Players) {
-                    if (abstractPlayer.state.alive && abstractPlayer.realizedCreature is Player player && player.Adrenaline > 0.0f) {
+                foreach (AbstractCreature abstract_player in game.Players) {
+                    if (abstract_player.state.alive && abstract_player.realizedCreature is Player player && player.Adrenaline > 0.0f) {
                         game.framesPerSecond = Mathf.RoundToInt(40f / Mathf.Lerp(1f, 1.5f, player.Adrenaline));
                         if (game.updateShortCut == Mathf.RoundToInt(3f / Mathf.Lerp(1f, 1.5f, player.Adrenaline)) - 1) {
                             game.updateShortCut = 2;

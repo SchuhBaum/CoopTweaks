@@ -23,9 +23,9 @@ internal static class MushroomMod {
     private static void Mushroom_BitByPlayer(On.Mushroom.orig_BitByPlayer orig, Mushroom mushroom, Creature.Grasp? grasp, bool eu) // Option_SlowMotion
     {
         orig(mushroom, grasp, eu);
-        foreach (AbstractCreature abstractPlayer in mushroom.abstractPhysicalObject.world.game.Players) // mushroom.room is null when in room transition // doesn't matter in this case
+        foreach (AbstractCreature abstract_player in mushroom.abstractPhysicalObject.world.game.Players) // mushroom.room is null when in room transition // doesn't matter in this case
         {
-            if (abstractPlayer.realizedCreature is Player player && player != grasp?.grabber) {
+            if (abstract_player.realizedCreature is Player player && player != grasp?.grabber) {
                 player.mushroomCounter += 320;
             }
         }

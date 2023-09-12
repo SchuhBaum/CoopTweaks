@@ -11,7 +11,7 @@ public static class PlayerMod {
     // variables
     //
 
-    public static bool has_encountered_NaN_bug = false;
+    public static bool has_encountered_not_a_number_bug = false;
 
     //
     // main
@@ -69,8 +69,8 @@ public static class PlayerMod {
         // synchronize with other player;
         // player in shortcuts don't update the mushroom counter on their own,
         // i.e. the update function is not called;
-        foreach (AbstractCreature abstractPlayer in player.abstractCreature.world.game.Players) {
-            if (abstractPlayer.realizedCreature is Player player_ && player_.inShortcut) {
+        foreach (AbstractCreature abstract_player in player.abstractCreature.world.game.Players) {
+            if (abstract_player.realizedCreature is Player player_ && player_.inShortcut) {
                 player_.mushroomCounter = player.mushroomCounter;
             }
         }
@@ -212,9 +212,9 @@ public static class PlayerMod {
     private static void Player_Update(On.Player.orig_Update orig, Player player, bool eu) // Option_DeafBeep // Option_ReleaseGrasp // Option_SlowMotion // Option_SlugOnBack
     {
         // bug is reported // temporary
-        if (Mathf.Max(1f - player.airInLungs, player.aerobicLevel - (player.slugcatStats.malnourished ? 1.2f : 1f) / (((player.input[0].x == 0 && player.input[0].y == 0) ? 400f : 1100f) * (1f + 3f * Mathf.InverseLerp(0.9f, 1f, player.aerobicLevel)))) is float.NaN && !has_encountered_NaN_bug) {
+        if (Mathf.Max(1f - player.airInLungs, player.aerobicLevel - (player.slugcatStats.malnourished ? 1.2f : 1f) / (((player.input[0].x == 0 && player.input[0].y == 0) ? 400f : 1100f) * (1f + 3f * Mathf.InverseLerp(0.9f, 1f, player.aerobicLevel)))) is float.NaN && !has_encountered_not_a_number_bug) {
             Debug.Log("CoopTweaks: The variable aerobicLevel might be NaN. Some body parts might be missing. Let's hope for the best. This message will only be logged once.");
-            has_encountered_NaN_bug = true;
+            has_encountered_not_a_number_bug = true;
         }
 
         if (!Option_DeafBeep && !Option_ReleaseGrasp && !Option_SlowMotion && !Option_SlugOnBack) {
@@ -233,8 +233,8 @@ public static class PlayerMod {
         orig(player, eu);
 
         if (player.input[0].jmp && !player.input[1].jmp && player.grabbedBy?.Count > 0 && Option_ReleaseGrasp) {
-            for (int graspIndex = player.grabbedBy.Count - 1; graspIndex >= 0; graspIndex--) {
-                if (player.grabbedBy[graspIndex] is Creature.Grasp grasp && grasp.grabber is Player player_) {
+            for (int grasp_index = player.grabbedBy.Count - 1; grasp_index >= 0; grasp_index--) {
+                if (player.grabbedBy[grasp_index] is Creature.Grasp grasp && grasp.grabber is Player player_) {
                     player_.ReleaseGrasp(grasp.graspUsed); // list is modified
                 }
             }

@@ -19,7 +19,7 @@ internal static class RegionGateMod {
     // private
     //
 
-    private static bool RegionGate_PlayersStandingStill(On.RegionGate.orig_PlayersStandingStill orig, RegionGate regionGate) {
+    private static bool RegionGate_PlayersStandingStill(On.RegionGate.orig_PlayersStandingStill orig, RegionGate region_gate) {
         return true;
     }
 }

@@ -26,8 +26,8 @@ internal static class SpearMod {
             return;
         }
 
-        foreach (AbstractCreature abstractPlayer in spear.abstractPhysicalObject.world.game.Players) {
-            if (abstractPlayer.realizedCreature is Player player && player != spear.thrownBy) {
+        foreach (AbstractCreature abstract_player in spear.abstractPhysicalObject.world.game.Players) {
+            if (abstract_player.realizedCreature is Player player && player != spear.thrownBy) {
                 player.mushroomCounter += 320;
             }
         }

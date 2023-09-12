@@ -10,8 +10,8 @@ internal static class ArtificialIntelligenceMod {
     //
 
     // bug is reported // temporary
-    private static bool ArtificialIntelligence_TrackerToDiscardDeadCreature(On.ArtificialIntelligence.orig_TrackerToDiscardDeadCreature orig, ArtificialIntelligence artificialIntelligence, AbstractCreature abstractCreature) {
-        if (abstractCreature.state.dead && abstractCreature.creatureTemplate.type == CreatureTemplate.Type.Slugcat) return false;
-        return orig(artificialIntelligence, abstractCreature);
+    private static bool ArtificialIntelligence_TrackerToDiscardDeadCreature(On.ArtificialIntelligence.orig_TrackerToDiscardDeadCreature orig, ArtificialIntelligence artificial_intelligence, AbstractCreature abstract_creature) {
+        if (abstract_creature.state.dead && abstract_creature.creatureTemplate.type == CreatureTemplate.Type.Slugcat) return false;
+        return orig(artificial_intelligence, abstract_creature);
     }
 }
