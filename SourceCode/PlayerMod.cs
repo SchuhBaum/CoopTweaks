@@ -244,7 +244,7 @@ public static class PlayerMod {
             SynchronizeMushroomCounter(player);
         }
 
-        if (player.slugOnBack.HasASlug && player.input[0].y != -1 && Option_SlugOnBack) {
+        if (player.slugOnBack != null && player.slugOnBack.HasASlug && player.input[0].y != -1 && Option_SlugOnBack) {
             player.slugOnBack.increment = false;
         }
     }
