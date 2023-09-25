@@ -32,8 +32,7 @@ public static class RainWorldGameMod {
     // private
     //
 
-    private static void IL_RainWorldGame_RawUpdate(ILContext context) // Option_SlowMotion
-    {
+    private static void IL_RainWorldGame_RawUpdate(ILContext context) { // Option_SlowMotion
         // LogAllInstructions(context);
 
         //

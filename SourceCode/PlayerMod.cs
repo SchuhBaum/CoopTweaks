@@ -80,8 +80,7 @@ public static class PlayerMod {
     // private
     //
 
-    private static void IL_Player_ClassMechanicsArtificer(ILContext context) // Option_ArtificerStun
-    {
+    private static void IL_Player_ClassMechanicsArtificer(ILContext context) { // Option_ArtificerStun
         // LogAllInstructions(context);
         ILCursor cursor = new(context);
 
@@ -128,8 +127,7 @@ public static class PlayerMod {
         // LogAllInstructions(context);
     }
 
-    private static void IL_Player_GrabUpdate(ILContext context) // Option_ItemBlinking // Option_SlugOnBack
-    {
+    private static void IL_Player_GrabUpdate(ILContext context) { // Option_ItemBlinking // Option_SlugOnBack
         // LogAllInstructions(context);
         ILCursor cursor = new(context);
 
@@ -182,8 +180,7 @@ public static class PlayerMod {
     //
     //
 
-    private static void Player_BiteEdibleObject(On.Player.orig_BiteEdibleObject orig, Player player, bool eu) // Option_SlowMotion
-    {
+    private static void Player_BiteEdibleObject(On.Player.orig_BiteEdibleObject orig, Player player, bool eu) { // Option_SlowMotion
         foreach (Creature.Grasp? grasp in player.grasps) {
             if (grasp?.grabbed is Mushroom) {
                 player.room?.PlaySound(SoundID.Slugcat_Bite_Dangle_Fruit, player.mainBodyChunk);
@@ -193,8 +190,7 @@ public static class PlayerMod {
         orig(player, eu);
     }
 
-    private static bool Player_CanIPickThisUp(On.Player.orig_CanIPickThisUp orig, Player player, PhysicalObject physical_object) // Option_ItemBlinking
-    {
+    private static bool Player_CanIPickThisUp(On.Player.orig_CanIPickThisUp orig, Player player, PhysicalObject physical_object) { // Option_ItemBlinking
         Player.ObjectGrabability object_grabability = player.Grabability(physical_object);
         bool both_hands_are_full = player.grasps[0] != null && player.grasps[1] != null;
 
@@ -209,8 +205,7 @@ public static class PlayerMod {
         return orig(player, physical_object);
     }
 
-    private static void Player_Update(On.Player.orig_Update orig, Player player, bool eu) // Option_DeafBeep // Option_ReleaseGrasp // Option_SlowMotion // Option_SlugOnBack
-    {
+    private static void Player_Update(On.Player.orig_Update orig, Player player, bool eu) { // Option_DeafBeep // Option_ReleaseGrasp // Option_SlowMotion // Option_SlugOnBack
         // bug is reported // temporary
         if (Mathf.Max(1f - player.airInLungs, player.aerobicLevel - (player.slugcatStats.malnourished ? 1.2f : 1f) / (((player.input[0].x == 0 && player.input[0].y == 0) ? 400f : 1100f) * (1f + 3f * Mathf.InverseLerp(0.9f, 1f, player.aerobicLevel)))) is float.NaN && !has_encountered_not_a_number_bug) {
             Debug.Log("CoopTweaks: The variable aerobicLevel might be NaN. Some body parts might be missing. Let's hope for the best. This message will only be logged once.");

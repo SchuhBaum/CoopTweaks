@@ -154,8 +154,7 @@ public class MainModOptions : OptionInterface {
         _check_boxes_text_labels.Add(new OpLabel(new Vector2(), new Vector2(), text, FLabelAlignment.Left));
     }
 
-    private void DrawCheckBoxes(ref OpTab tab) // changes pos.y but not pos.x
-    {
+    private void DrawCheckBoxes(ref OpTab tab) { // changes pos.y but not pos.x
         if (_check_box_configurables.Count != _check_boxes_text_labels.Count) return;
 
         float width = _margin_x.y - _margin_x.x;
@@ -197,8 +196,8 @@ public class MainModOptions : OptionInterface {
             _pos.y -= text_height;
         }
 
-        OpLabel text_label = new(new Vector2(), new Vector2(20f, text_height), text, alignment, big_text) // minimal size.x = 20f
-        {
+        // minimal size.x = 20f;
+        OpLabel text_label = new(new Vector2(), new Vector2(20f, text_height), text, alignment, big_text) {
             autoWrap = true
         };
         _text_labels.Add(text_label);

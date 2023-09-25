@@ -34,22 +34,19 @@ internal static class RoomMod {
     // private
     //
 
-    private static ChunkSoundEmitter Room_PlaySound(On.Room.orig_PlaySound_SoundID_BodyChunk_bool_float_float orig, Room room, SoundID sound_id, BodyChunk chunk, bool loop, float vol, float pitch) // Option_SlowMotion
-    {
+    private static ChunkSoundEmitter Room_PlaySound(On.Room.orig_PlaySound_SoundID_BodyChunk_bool_float_float orig, Room room, SoundID sound_id, BodyChunk chunk, bool loop, float vol, float pitch) { // Option_SlowMotion
         if (sound_id == SoundID.Mushroom_Trip_LOOP) return orig(room, SoundID.None, chunk, loop, vol, pitch);
         return orig(room, sound_id, chunk, loop, vol, pitch);
     }
 
-    private static void Room_Update(On.Room.orig_Update orig, Room room) // Option_SlugcatCollision
-    {
+    private static void Room_Update(On.Room.orig_Update orig, Room room) { // Option_SlugcatCollision
         // collision between slugcats (and creatures that are being carried by slugcats)
         if (room.game == null) {
             orig(room);
             return;
         }
 
-        if (_creatures_in_room_list.Count > 0) // had a problem with DeerFix when throwing puff balls // orig(room) never returned
-        {
+        if (_creatures_in_room_list.Count > 0) { // had a problem with DeerFix when throwing puff balls // orig(room) never returned
             Debug.Log("CoopTweaks: Slugcat collisions could not be reset normally. Reset now.");
             foreach (Creature creature in _creatures_in_room_list) {
                 creature.CollideWithObjects = true;
