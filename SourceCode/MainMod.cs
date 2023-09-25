@@ -10,7 +10,7 @@ using UnityEngine;
 
 namespace CoopTweaks;
 
-[BepInPlugin("SchuhBaum.CoopTweaks", "CoopTweaks", "0.1.7")]
+[BepInPlugin("SchuhBaum.CoopTweaks", "CoopTweaks", "0.1.8")]
 public class MainMod : BaseUnityPlugin {
     //
     // meta data
@@ -18,7 +18,7 @@ public class MainMod : BaseUnityPlugin {
 
     public static readonly string mod_id = "CoopTweaks";
     public static readonly string author = "SchuhBaum";
-    public static readonly string version = "0.1.7";
+    public static readonly string version = "0.1.8";
 
     //
     // options
@@ -32,13 +32,14 @@ public class MainMod : BaseUnityPlugin {
     public static bool Option_RegionGates => MainModOptions.region_gates.Value;
     public static bool Option_SlowMotion => MainModOptions.slow_motion.Value;
     public static bool Option_SlugcatCollision => MainModOptions.slugcat_collision.Value;
-    public static bool Option_SlugOnBack => MainModOptions.slug_on_back.Value;
+    public static bool Option_SlugOnBack => MainModOptions.slug_on_back.Value && !is_slugpup_safari_enabled;
 
     //
     // other mods
     //
 
     public static bool is_sb_camera_scroll_enabled = false;
+    public static bool is_slugpup_safari_enabled = false;
 
     //
     // variables
@@ -123,7 +124,12 @@ public class MainMod : BaseUnityPlugin {
         foreach (ModManager.Mod mod in ModManager.ActiveMods) {
             if (mod.id == "SBCameraScroll") {
                 is_sb_camera_scroll_enabled = true;
-                break;
+                continue;
+            }
+
+            if (mod.id == "yeliah.slugpupFieldtrip") {
+                is_slugpup_safari_enabled = true;
+                continue;
             }
         }
 
@@ -131,6 +137,12 @@ public class MainMod : BaseUnityPlugin {
             Debug.Log("CoopTweaks: SBCameraScroll not found.");
         } else {
             Debug.Log("CoopTweaks: SBCameraScroll found. Synchronize shortcut position updates when mushroom effect is active.");
+        }
+
+        if (!is_slugpup_safari_enabled) {
+            Debug.Log("CoopTweaks: Slugpup Safari not found.");
+        } else {
+            Debug.Log("CoopTweaks: Slugpup Safari found. Ignore the SlugOnBack option. Otherwise the slugpups don't stack as intended.");
         }
 
         ArtificialIntelligenceMod.OnEnable();

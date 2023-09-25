@@ -158,14 +158,17 @@ public static class PlayerMod {
             return;
         }
 
-        if (cursor.TryGotoNext(instruction => instruction.MatchCallvirt<Player.SlugOnBack>("SlugToHand"))) {
+        if (cursor.TryGotoNext(instruction => instruction.MatchCallvirt<Player.SlugOnBack>("SlugToHand")) &&
+            cursor.TryGotoPrev(instruction => instruction.MatchBle(out ILLabel _))) {
             if (Option_SlugOnBack) {
                 if (can_log_il_hooks) {
-                    Debug.Log("CoopTweaks: IL_Player_GrabUpdate: Index " + cursor.Index); // 2497
+                    Debug.Log("CoopTweaks: IL_Player_GrabUpdate: Index " + cursor.Index); // 2482
                 }
 
-                cursor.Goto(cursor.Index - 14); // 2483
-                cursor.Emit(OpCodes.Br, cursor.Prev.Operand); // skip whole if statement;
+                // don't throw slugpups that are carried on your back; skip the if block
+                // after the wantToThrow check is done;
+                cursor.Goto(cursor.Index + 1); // 2483
+                cursor.Emit(OpCodes.Br, cursor.Prev.Operand);
             }
         } else {
             if (can_log_il_hooks) {
@@ -239,6 +242,9 @@ public static class PlayerMod {
             SynchronizeMushroomCounter(player);
         }
 
+        // this does not work with the mod Slugpup Safari; it needs to update in order 
+        // to stack multiple slugpups; besides that it has a throw protection on its
+        // own; so IL_Player_GrabUpdate changes are not needed;
         if (player.slugOnBack != null && player.slugOnBack.HasASlug && player.input[0].y != -1 && Option_SlugOnBack) {
             player.slugOnBack.increment = false;
         }

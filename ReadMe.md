@@ -1,5 +1,5 @@
 ## CoopTweaks
-###### Version: 0.1.7
+###### Version: 0.1.8
 
 This is a mod for Rain World v1.9.
 
@@ -18,7 +18,7 @@ This mod is a port of the tweaks from the mod JollyCoopFixesAndStuff for Rain Wo
 
 ### Installation
 0. Update Rain World to version 1.9 if needed.
-1. Download the file  `CoopTweaks.zip` from [Releases](https://github.com/SchuhBaum/CoopTweaks/releases/tag/v0.1.7).
+1. Download the file  `CoopTweaks.zip` from [Releases](https://github.com/SchuhBaum/CoopTweaks/releases/tag/v0.1.8).
 2. Extract its content in the folder `[Steam]\SteamApps\common\Rain World\RainWorld_Data\StreamingAssets\mods`.
 3. Start the game as normal. In the main menu select `Remix` and enable the mod. 
 
@@ -32,7 +32,7 @@ If you have feedback, you can message me on Discord `@schuhbaum` or write an ema
 There are two licenses available - MIT and Unlicense. You can choose which one you want to use. 
 
 ### Changelog
-v0.1.7:
+v0.1.8:
 - (Item Blinking) Fixed a bug where spearmaster could not put spears directly to its back.
 - Restored compatibility with SBCameraScroll.
 - IL hooks should no longer be logged multiple times when other mods add these IL hooks as well.
@@ -42,6 +42,7 @@ v0.1.7:
 - Added a potential workaround for the bug in coop where you would be missing body parts.
 - (Item Blinking) Prevent items from blinking if the slugcat is carried on the back.
 - (SlugOnBack) Fixed a bug that would freeze the game when playing as a slugpup (using the Unshackled Co-op mod for example).
+- (SlugOnBack) This option is ignore when using the mod Slugpup Safari. Otherwise the slugpups don't stack as intended.
 
 v0.1.0:
 - Initial release.
