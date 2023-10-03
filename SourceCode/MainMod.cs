@@ -10,7 +10,7 @@ using UnityEngine;
 
 namespace CoopTweaks;
 
-[BepInPlugin("SchuhBaum.CoopTweaks", "CoopTweaks", "0.1.8")]
+[BepInPlugin("SchuhBaum.CoopTweaks", "CoopTweaks", "0.1.9")]
 public class MainMod : BaseUnityPlugin {
     //
     // meta data
@@ -18,7 +18,7 @@ public class MainMod : BaseUnityPlugin {
 
     public static readonly string mod_id = "CoopTweaks";
     public static readonly string author = "SchuhBaum";
-    public static readonly string version = "0.1.8";
+    public static readonly string version = "0.1.9";
 
     //
     // options
@@ -142,7 +142,7 @@ public class MainMod : BaseUnityPlugin {
         if (!is_slugpup_safari_enabled) {
             Debug.Log("CoopTweaks: Slugpup Safari not found.");
         } else {
-            Debug.Log("CoopTweaks: Slugpup Safari found. Ignore the SlugOnBack option. Otherwise the slugpups don't stack as intended.");
+            Debug.Log("CoopTweaks: Slugpup Safari found. Disable Option_SlugOnBack. Otherwise slugpups don't stack as intended.");
         }
 
         ArtificialIntelligenceMod.OnEnable();

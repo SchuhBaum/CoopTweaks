@@ -147,8 +147,9 @@ public static class PlayerMod {
                 ILLabel label = (ILLabel)cursor.Next.Operand;
                 cursor.Goto(cursor.Index + 1);
 
+                // let items not blink when you are a on the back of another player or a npc;
                 cursor.Emit(OpCodes.Ldarg_0); // player
-                cursor.EmitDelegate<Func<Player, bool>>(player => player.onBack != null);
+                cursor.EmitDelegate<Func<Player, bool>>(player => player.onBack != null || player.isNPC);
                 cursor.Emit(OpCodes.Brtrue, label);
             }
         } else {
