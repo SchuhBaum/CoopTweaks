@@ -39,7 +39,6 @@ public class MainMod : BaseUnityPlugin {
     //
 
     public static bool is_sb_camera_scroll_enabled = false;
-    public static bool is_slugpup_safari_enabled = false;
 
     //
     // variables
