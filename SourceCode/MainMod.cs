@@ -10,7 +10,7 @@ using UnityEngine;
 
 namespace CoopTweaks;
 
-[BepInPlugin("SchuhBaum.CoopTweaks", "CoopTweaks", "0.1.9")]
+[BepInPlugin("SchuhBaum.CoopTweaks", "CoopTweaks", "0.2.0")]
 public class MainMod : BaseUnityPlugin {
     //
     // meta data
@@ -18,7 +18,7 @@ public class MainMod : BaseUnityPlugin {
 
     public static readonly string mod_id = "CoopTweaks";
     public static readonly string author = "SchuhBaum";
-    public static readonly string version = "0.1.9";
+    public static readonly string version = "0.2.0";
 
     //
     // options
@@ -32,7 +32,7 @@ public class MainMod : BaseUnityPlugin {
     public static bool Option_RegionGates => MainModOptions.region_gates.Value;
     public static bool Option_SlowMotion => MainModOptions.slow_motion.Value;
     public static bool Option_SlugcatCollision => MainModOptions.slugcat_collision.Value;
-    public static bool Option_SlugOnBack => MainModOptions.slug_on_back.Value && !is_slugpup_safari_enabled;
+    public static bool Option_SlugOnBack => MainModOptions.slug_on_back.Value;
 
     //
     // other mods
@@ -124,12 +124,7 @@ public class MainMod : BaseUnityPlugin {
         foreach (ModManager.Mod mod in ModManager.ActiveMods) {
             if (mod.id == "SBCameraScroll") {
                 is_sb_camera_scroll_enabled = true;
-                continue;
-            }
-
-            if (mod.id == "yeliah.slugpupFieldtrip") {
-                is_slugpup_safari_enabled = true;
-                continue;
+                break;
             }
         }
 
@@ -137,12 +132,6 @@ public class MainMod : BaseUnityPlugin {
             Debug.Log("CoopTweaks: SBCameraScroll not found.");
         } else {
             Debug.Log("CoopTweaks: SBCameraScroll found. Synchronize shortcut position updates when mushroom effect is active.");
-        }
-
-        if (!is_slugpup_safari_enabled) {
-            Debug.Log("CoopTweaks: Slugpup Safari not found.");
-        } else {
-            Debug.Log("CoopTweaks: Slugpup Safari found. Disable Option_SlugOnBack. Otherwise slugpups don't stack as intended.");
         }
 
         ArtificialIntelligenceMod.OnEnable();

@@ -21,7 +21,7 @@ public class MainModOptions : OptionInterface {
     public static Configurable<bool> region_gates = main_mod_options.config.Bind("regionGates", defaultValue: true, new ConfigurableInfo("When enabled, region gates don't wait for players to stand still.", null, "", "Region Gates"));
     public static Configurable<bool> slow_motion = main_mod_options.config.Bind("slowMotion", defaultValue: true, new ConfigurableInfo("When enabled, removes or reduces the slow motion effect in most situations. In addition, the mushroom effect is shared with other players.", null, "", "Slow Motion"));
     public static Configurable<bool> slugcat_collision = main_mod_options.config.Bind("slugcatCollision", defaultValue: true, new ConfigurableInfo("When enabled, players and (most) things that they grab don't collide with each other.", null, "", "Slugcat Collision"));
-    public static Configurable<bool> slug_on_back = main_mod_options.config.Bind("slugOnBack", defaultValue: true, new ConfigurableInfo("When enabled, you can only drop slugcats from your back when holding down and grab.", null, "", "SlugOnBack"));
+    public static Configurable<bool> slug_on_back = main_mod_options.config.Bind("slugOnBack", defaultValue: true, new ConfigurableInfo("When enabled, you can only drop slugcats from your back when holding down/up and grab.", null, "", "SlugOnBack"));
 
     //
     // parameters

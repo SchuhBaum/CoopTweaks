@@ -243,10 +243,9 @@ public static class PlayerMod {
             SynchronizeMushroomCounter(player);
         }
 
-        // this does not work with the mod Slugpup Safari; it needs to update in order 
-        // to stack multiple slugpups; besides that it has a throw protection on its
-        // own; so IL_Player_GrabUpdate changes are not needed;
-        if (player.slugOnBack != null && player.slugOnBack.HasASlug && player.input[0].y != -1 && Option_SlugOnBack) {
+        // dropping slugcats when holding up is helpful when using the mod Slugpup
+        // Safari; holding down + grab will drop all slugpups at once;
+        if (Option_SlugOnBack && player.slugOnBack != null && !(player.input[0].y == 0 && (player.grasps[0]?.grabbed is Player || player.grasps[1]?.grabbed is Player) || player.input[0].y != 0 && player.grasps[0]?.grabbed is not Player && player.grasps[1]?.grabbed is not Player)) {
             player.slugOnBack.increment = false;
         }
     }
