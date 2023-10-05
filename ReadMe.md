@@ -12,7 +12,7 @@ Includes various tweaks:
 - (Region Gates) Region gates don't wait for players to stand still.
 - (Slow Motion) Removes or reduces the slow motion effect in most situations. In addition, the mushroom effect is shared with other players.
 - (Slugcat Collision) Slugcats don't collide with each other.
-- (SlugOnBack) You can only drop slugcats from your back when holding down and grab.  
+- (SlugOnBack) You can only drop slugcats from your back when holding down/up and grab.  
   
 This mod is a port of the tweaks from the mod JollyCoopFixesAndStuff for Rain World v1.5.
 
