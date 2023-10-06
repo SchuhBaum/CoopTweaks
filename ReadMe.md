@@ -1,5 +1,5 @@
 ## CoopTweaks
-###### Version: 0.2.0
+###### Version: 0.2.1
 
 This is a mod for Rain World v1.9.
 
@@ -12,13 +12,13 @@ Includes various tweaks:
 - (Region Gates) Region gates don't wait for players to stand still.
 - (Slow Motion) Removes or reduces the slow motion effect in most situations. In addition, the mushroom effect is shared with other players.
 - (Slugcat Collision) Slugcats don't collide with each other.
-- (SlugOnBack) You can only drop slugcats from your back when holding down/up and grab.  
+- (SlugOnBack) You can only drop slugcats from your back when holding down/up and grab. Leeches don't target carried slugcats.
   
 This mod is a port of the tweaks from the mod JollyCoopFixesAndStuff for Rain World v1.5.
 
 ### Installation
 0. Update Rain World to version 1.9 if needed.
-1. Download the file  `CoopTweaks.zip` from [Releases](https://github.com/SchuhBaum/CoopTweaks/releases/tag/v0.2.0).
+1. Download the file  `CoopTweaks.zip` from [Releases](https://github.com/SchuhBaum/CoopTweaks/releases/tag/v0.2.1).
 2. Extract its content in the folder `[Steam]\SteamApps\common\Rain World\RainWorld_Data\StreamingAssets\mods`.
 3. Start the game as normal. In the main menu select `Remix` and enable the mod. 
 
@@ -32,6 +32,10 @@ If you have feedback, you can message me on Discord `@schuhbaum` or write an ema
 There are two licenses available - MIT and Unlicense. You can choose which one you want to use. 
 
 ### Changelog
+v0.2.1
+- (SlugOnBack) Leeches don't target slugcats that are carried on the back. Otherwise, they get dropped immediately.
+- (Region Gates) Fixed a bug where the gate would open when player 1 was not in the room.
+
 v0.2.0:
 - (Item Blinking) Fixed a bug where spearmaster could not put spears directly to its back.
 - Restored compatibility with SBCameraScroll.

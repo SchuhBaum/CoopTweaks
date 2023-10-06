@@ -27,12 +27,14 @@ public static class ProcessManagerMod {
         Debug.Log("CoopTweaks: Initialize option specific hooks.");
 
         can_log_il_hooks = true;
+        LeechMod.On_Config_Changed();
         MushroomMod.On_Config_Changed();
         PlayerMod.On_Config_Changed();
-        RainWorldGameMod.On_Config_Changed();
 
+        RainWorldGameMod.On_Config_Changed();
         RegionGateMod.On_Config_Changed();
         RoomMod.On_Config_Changed();
+
         SpearMod.On_Config_Changed();
         can_log_il_hooks = false;
     }
