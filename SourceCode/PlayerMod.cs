@@ -1,6 +1,8 @@
-using Mono.Cecil.Cil;
+﻿using Mono.Cecil.Cil;
 using MonoMod.Cil;
+using MonoMod.RuntimeDetour;
 using System;
+using System.Reflection;
 using UnityEngine;
 using static CoopTweaks.MainMod;
 
@@ -8,9 +10,11 @@ namespace CoopTweaks;
 
 public static class PlayerMod {
     //
-    // variables
+    // parameters and variables
     //
 
+    // private static Hook? hook_Player_CanPutSlugToBack = null;
+    private static Hook? hook_Player_CanRetrieveSlugFromBack = null;
     public static bool has_encountered_not_a_number_bug = false;
 
     //
@@ -18,6 +22,11 @@ public static class PlayerMod {
     //
 
     internal static void On_Config_Changed() {
+        // hook_Player_CanPutSlugToBack?.Dispose();
+        hook_Player_CanRetrieveSlugFromBack?.Dispose();
+        // hook_Player_CanPutSlugToBack = null;
+        hook_Player_CanRetrieveSlugFromBack = null;
+
         IL.Player.ClassMechanicsArtificer -= IL_Player_ClassMechanicsArtificer;
         IL.Player.GrabUpdate -= IL_Player_GrabUpdate;
 
@@ -57,11 +66,60 @@ public static class PlayerMod {
             // adds eat sound to mushrooms;
             On.Player.BiteEdibleObject += Player_BiteEdibleObject;
         }
+        
+        if (Type.GetType("Player, Assembly-CSharp") is Type player_class) {
+            if (Option_SlugOnBack) {
+                // try {
+                //     hook_Player_CanPutSlugToBack = new Hook(
+                //         player_class.GetProperty(
+                //             "CanPutSlugToBack",
+                //             BindingFlags.Public | BindingFlags.Instance
+                //         ).GetMethod,
+                //         typeof(PlayerMod).GetMethod("Player_CanPutSlugToBack")
+                //     );
+                // } catch (Exception exception) {
+                //     Debug.Log("InfiniteSpears: " + exception);
+                // }
+
+                try {
+                    hook_Player_CanRetrieveSlugFromBack = new Hook(
+                        player_class.GetProperty(
+                            "CanRetrieveSlugFromBack",
+                            BindingFlags.Public | BindingFlags.Instance
+                        ).GetMethod,
+                        typeof(PlayerMod).GetMethod("Player_CanRetrieveSlugFromBack")
+                    );
+                } catch (Exception exception) {
+                    Debug.Log("InfiniteSpears: " + exception);
+                }
+            }
+        } else {
+            Debug.Log(mod_id + ": Failed to create property hooks for class Player.");
+        }
     }
 
     //
     // public
     //
+
+    // public static bool Player_CanPutSlugToBack(Func<Player, bool> orig, Player player) {
+    //     // When using Slugpup Safari, this hook gets ignored.
+    //     bool result = orig(player);
+    //     if (player.input[0].y == 0) return false;
+    //     return result;
+    // }
+
+    public static bool Player_CanRetrieveSlugFromBack(Func<Player, bool> orig, Player player) {
+        //
+        // This helps with Slugpup Safari. Holding up prevents accidents when
+        // swapping items. Or when you can carry backspears as well. Holding
+        // down + grab drops all slugpups at once.
+        //
+
+        bool result = orig(player);
+        if (player.input[0].y == 0) return false;
+        return result;
+    }
 
     public static void SynchronizeMushroomCounter(Player player) {
         if (player.inShortcut) return;
@@ -241,12 +299,6 @@ public static class PlayerMod {
 
         if (Option_SlowMotion) {
             SynchronizeMushroomCounter(player);
-        }
-
-        // dropping slugcats when holding up is helpful when using the mod Slugpup
-        // Safari; holding down + grab will drop all slugpups at once;
-        if (Option_SlugOnBack && player.slugOnBack != null && !(player.input[0].y == 0 && (player.grasps[0]?.grabbed is Player || player.grasps[1]?.grabbed is Player) || player.input[0].y != 0 && player.grasps[0]?.grabbed is not Player && player.grasps[1]?.grabbed is not Player)) {
-            player.slugOnBack.increment = false;
         }
     }
 }
