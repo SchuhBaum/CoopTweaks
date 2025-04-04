@@ -1,7 +1,7 @@
 ## CoopTweaks
-###### Version: 0.2.2
+###### Version: 0.2.3
 
-This is a mod for Rain World v1.9.
+This is a mod for Rain World v1.10.
 
 ### Description
 Includes various tweaks:
@@ -17,8 +17,8 @@ Includes various tweaks:
 This mod is a port of the tweaks from the mod JollyCoopFixesAndStuff for Rain World v1.5.
 
 ### Installation
-0. Update Rain World to version 1.9 if needed.
-1. Download the file  `CoopTweaks.zip` from [Releases](https://github.com/SchuhBaum/CoopTweaks/releases/tag/v0.2.2).
+0. Update Rain World to version 1.10 if needed.
+1. Download the file  `CoopTweaks.zip` from [Releases](https://github.com/SchuhBaum/CoopTweaks/releases/tag/v0.2.3).
 2. Extract its content in the folder `[Steam]\SteamApps\common\Rain World\RainWorld_Data\StreamingAssets\mods`.
 3. Start the game as normal. In the main menu select `Remix` and enable the mod. 
 
@@ -32,6 +32,11 @@ If you have feedback, you can message me on Discord `@schuhbaum` or write an ema
 See the file LICENSE-MIT.
 
 ### Changelog
+#### (Rain World v1.10)
+v0.2.3:
+- Updated the meta data for Rain World v1.10.
+
+#### (Rain World v1.9)
 v0.2.2:
 - (SlugOnBack) Simplified implementation.
 
