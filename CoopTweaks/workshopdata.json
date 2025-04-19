@@ -2,8 +2,8 @@
   "Title": "CoopTweaks",
   "Description": "Includes various tweaks. Each tweak can be turned off in the Remix options menu.",
   "ID": "CoopTweaks",
-  "Version": "0.2.3",
-  "TargetGameVersion": "v1.10.1",
+  "Version": "0.2.4",
+  "TargetGameVersion": "v1.10",
   "Requirements": "",
   "RequirementNames": "",
   "Authors": "SchuhBaum",
@@ -13,5 +13,6 @@
     "Accessibility"
   ],
   "WorkshopID": 2934208506,
-  "UploadFilesOnly": true
+  "UploadFilesOnly": true,
+  "UploadThumbnail": false
 }
