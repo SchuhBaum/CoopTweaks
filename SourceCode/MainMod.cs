@@ -1,8 +1,4 @@
-﻿using BepInEx;
-using MonoMod.Cil;
-using System.Security.Permissions;
-using UnityEngine;
-
+﻿
 // allows access to private members;
 #pragma warning disable CS0618
 [assembly: SecurityPermission(SecurityAction.RequestMinimum, SkipVerification = true)]
@@ -10,7 +6,7 @@ using UnityEngine;
 
 namespace CoopTweaks;
 
-[BepInPlugin("SchuhBaum.CoopTweaks", "CoopTweaks", "0.3.0")]
+[BepInPlugin("SchuhBaum.CoopTweaks", "CoopTweaks", "0.3.1")]
 public class MainMod : BaseUnityPlugin {
     //
     // meta data
@@ -18,7 +14,7 @@ public class MainMod : BaseUnityPlugin {
 
     public static readonly string mod_id = "CoopTweaks";
     public static readonly string author = "SchuhBaum";
-    public static readonly string version = "0.3.0";
+    public static readonly string version = "0.3.1";
 
     //
     // options
@@ -58,7 +54,12 @@ public class MainMod : BaseUnityPlugin {
     // public
     //
 
-    public static void LogAllInstructions(ILContext context, int index_string_length = 9, int op_code_string_length = 14) {
+    public static void
+    LogAllInstructions(
+        ILContext context,
+        int index_string_length = 9,
+        int op_code_string_length = 14)
+    {
         if (context == null) return;
 
         Debug.Log("-----------------------------------------------------------------");

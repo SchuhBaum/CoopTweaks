@@ -1,8 +1,3 @@
-using Mono.Cecil.Cil;
-using MonoMod.Cil;
-using System;
-using UnityEngine;
-using static CoopTweaks.MainMod;
 
 namespace CoopTweaks;
 

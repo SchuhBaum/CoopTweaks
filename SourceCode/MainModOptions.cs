@@ -1,8 +1,3 @@
-using Menu.Remix.MixedUI;
-using System.Collections.Generic;
-using UnityEngine;
-using static CoopTweaks.MainMod;
-using static CoopTweaks.ProcessManagerMod;
 
 namespace CoopTweaks;
 

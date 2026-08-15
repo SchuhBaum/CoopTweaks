@@ -1,4 +1,3 @@
-using static CoopTweaks.MainMod;
 
 namespace CoopTweaks;
 

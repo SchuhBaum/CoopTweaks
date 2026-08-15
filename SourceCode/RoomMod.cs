@@ -1,7 +1,3 @@
-using RWCustom;
-using System.Collections.Generic;
-using UnityEngine;
-using static CoopTweaks.MainMod;
 
 namespace CoopTweaks;
 

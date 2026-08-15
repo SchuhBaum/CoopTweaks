@@ -2,7 +2,7 @@
   "Title": "CoopTweaks",
   "Description": "Includes various tweaks. Each tweak can be turned off in the Remix options menu.",
   "ID": "CoopTweaks",
-  "Version": "0.3.0",
+  "Version": "0.3.1",
   "TargetGameVersion": "v1.11",
   "Requirements": "",
   "RequirementNames": "",

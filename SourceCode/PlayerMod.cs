@@ -1,11 +1,4 @@
-﻿using Mono.Cecil.Cil;
-using MonoMod.Cil;
-using MonoMod.RuntimeDetour;
-using System;
-using System.Reflection;
-using UnityEngine;
-using static CoopTweaks.MainMod;
-
+﻿
 namespace CoopTweaks;
 
 public static class PlayerMod {

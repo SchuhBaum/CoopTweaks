@@ -1,5 +1,5 @@
 ## CoopTweaks
-###### Version: 0.3.0
+###### Version: 0.3.1
 
 This is a mod for Rain World v1.11.
 
@@ -18,7 +18,7 @@ This mod is a port of the tweaks from the mod JollyCoopFixesAndStuff for Rain Wo
 
 ### Installation
 0. Update Rain World to version 1.11 if needed.
-1. Download the file  `CoopTweaks.zip` from [Releases](https://github.com/SchuhBaum/CoopTweaks/releases/tag/v0.3.0).
+1. Download the file  `CoopTweaks.zip` from [Releases](https://github.com/SchuhBaum/CoopTweaks/releases/tag/v0.3.1).
 2. Extract its content in the folder `[Steam]\SteamApps\common\Rain World\RainWorld_Data\StreamingAssets\mods`.
 3. Start the game as normal. In the main menu select `Remix` and enable the mod. 
 
@@ -33,6 +33,9 @@ See the file LICENSE-MIT.
 
 ### Changelog
 #### (Rain World v1.11)
+v0.3.1:
+- (Region Gates) Improved compatibility with `OSHA Compliant Gates`.
+
 v0.3.0:
 - Bumped version requirement to v1.11.
 

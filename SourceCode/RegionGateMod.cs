@@ -1,27 +1,41 @@
-using static CoopTweaks.MainMod;
 
 namespace CoopTweaks;
 
 internal static class RegionGateMod {
     //
     // main
-    //
 
     internal static void On_Config_Changed() {
+        IL.RegionGate.PlayersStandingStill -= IL_RegionGate_PlayersStandingStill;
         On.RegionGate.PlayersInZone -= RegionGate_PlayersInZone;
-        On.RegionGate.PlayersStandingStill -= RegionGate_PlayersStandingStill;
 
         if (Option_RegionGates) {
+            IL.RegionGate.PlayersStandingStill += IL_RegionGate_PlayersStandingStill; // ignore inputs
             On.RegionGate.PlayersInZone += RegionGate_PlayersInZone;
-            On.RegionGate.PlayersStandingStill += RegionGate_PlayersStandingStill; // ignore inputs
         }
     }
 
     //
     // private
-    //
 
-    private static int RegionGate_PlayersInZone(On.RegionGate.orig_PlayersInZone orig, RegionGate region_gate) {
+    private static void
+    IL_RegionGate_PlayersStandingStill(
+        ILContext context)
+    {
+        // LogAllInstructions(context);
+
+        var cursor = new ILCursor(context);
+        cursor.Emit(OpCodes.Ldc_I4_1);
+        cursor.Emit(OpCodes.Ret);
+
+        // LogAllInstructions(context);
+    }
+
+    private static int
+    RegionGate_PlayersInZone(
+        On.RegionGate.orig_PlayersInZone orig,
+        RegionGate region_gate)
+    {
         //
         // this does not work properly in vanilla; if player 1 is not in the room then
         // it would just open for player 2; it relies on the function PlayersStandingStill()
@@ -43,9 +57,5 @@ internal static class RegionGateMod {
             }
         }
         return vanilla_result;
-    }
-
-    private static bool RegionGate_PlayersStandingStill(On.RegionGate.orig_PlayersStandingStill orig, RegionGate region_gate) {
-        return true;
     }
 }

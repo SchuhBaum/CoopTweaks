@@ -1,8 +1,3 @@
-using UnityEngine;
-
-using static CoopTweaks.MainMod;
-using static CoopTweaks.MainModOptions;
-using static ProcessManager;
 
 namespace CoopTweaks;
 
